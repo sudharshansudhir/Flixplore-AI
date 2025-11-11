@@ -8,10 +8,15 @@ const SearchResults = ({query}) => {
   
       const {list,setlist,Wishlistind,setcurrfilm,setWishlistind} = useContext(AppContext)
       const navigate=useNavigate()
+  const [allmovies,setallmovies]=useState()
 
-
-        const Movies=allmovies.allmovies.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase()) )
-        
+        const Movies=allmovies.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase()) )
+       useEffect(()=>{
+  fetch("http://localhost:3000/")
+  .then((values)=>values.json())
+  .then((value)=>setallmovies(value))
+  .catch((e)=>console.log("Error occured during fetching action movies"))
+},[]) 
 
   return (
     <div>
@@ -27,16 +32,16 @@ const SearchResults = ({query}) => {
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 
     <div className="p-4 w-full">
-      {Wishlistind.includes(item.id) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+      {Wishlistind.includes(item._id) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Go to Wishlist
         </button>
-      ) : (<button  onClick={() => { setlist([...list, item.id]);
-         setWishlistind([...Wishlistind, item.id]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+      ) : (<button  onClick={() => { setlist([...list, item._id]);
+         setWishlistind([...Wishlistind, item._id]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Add to Wishlist
         </button>
       )}
 
-      <NavLink to="/watch" onClick={()=>setcurrfilm(item.id)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+      <NavLink to="/watch" onClick={()=>setcurrfilm(item._id)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
               Watch Now
             </NavLink>
     </div>

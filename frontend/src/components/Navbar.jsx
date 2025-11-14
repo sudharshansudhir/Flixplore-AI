@@ -35,7 +35,7 @@ const Navbar = ({setquery}) => {
             <div className='flex text-2xl justify-around items-center w-[30%]'>
     
               <input onChange={navi} type="text" name="search" id="search" placeholder="Type movie or series" className="py-1 px-3 rounded-md bg-[#222121ff] text-white border border-gray-600 focus:ring-2 focus:ring-red-500"/>
-              {login?<NavLink className={({ isActive }) => isActive ? 'nav-hover active-link' : 'nav-hover' } to="/profile"><BsFillPersonFill/></NavLink>:<NavLink className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000]" to="/login">Login</NavLink>}
+              {login?<NavLink className={({ isActive }) => isActive ? 'nav-hover active-link' : 'nav-hover' } to="/profile"><BsFillPersonFill/></NavLink>:<NavLink className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000]" to="/signin">Login</NavLink>}
             </div>
         </div>
 

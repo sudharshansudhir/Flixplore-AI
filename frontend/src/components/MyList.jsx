@@ -5,13 +5,17 @@ import { NavLink } from 'react-router-dom'
 
 const MyList = () => {
 
-    const {list,setcurrfilm}=useContext(AppContext)
+    const {Wishlistind,list,setcurrfilm}=useContext(AppContext)
     const [Movies,setMovies]=useState()
     var filteredmovies;
 if(Movies){
-      filteredmovies=Movies.filter((item)=>list.includes(item._id))
-      console.log(filteredmovies,Movies,list)
-}
+      filteredmovies=Movies.filter((item)=>list.includes(item.name))
+      console.log(filteredmovies,Movies,list,Wishlistind)
+      console.log("All movies:",Movies)
+      console.log("Filtered movies:",filteredmovies)
+      console.log("Wishlist indices:",Wishlistind)
+      console.log("List:",list)
+    }
 
     useEffect(()=>{
   fetch("http://localhost:3000/")

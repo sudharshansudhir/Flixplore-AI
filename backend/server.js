@@ -1,5 +1,7 @@
 const express = require('express')
 const cors = require("cors");
+const bcrypt=require("bcrypt")
+const jwt=require("jsonwebtoken")
 require("dotenv").config();
 
 const mongoose=require('mongoose')
@@ -12,6 +14,15 @@ mongoose.connect(process.env.MONGO_URI)
         console.log("Error Occured",err)
     })
 
+const userSchema=new mongoose.Schema({
+    username:{type:String},
+    email:{
+        type:String,
+        unique:true,
+    },
+    password:{type:String}
+
+})
 const movieSchema=new mongoose.Schema({
     name: {type:String,unique:true},
     year:{type:Number},
@@ -108,6 +119,7 @@ const seriesSchema=new mongoose.Schema({
     languages_available:[{type:String}],
 })
 
+const User=mongoose.model("User",userSchema)
 const Movie=mongoose.model("Movie",movieSchema)
 const allMovies=mongoose.model("allMovies",allmoviesSchema)
 const Actions=mongoose.model("Actions",actionSchema)
@@ -120,6 +132,18 @@ const app=express()
 app.use(cors())
 app.use(express.json());
 
+const authMiddleware=(req,res,next)=>{
+    const token=req.header("Authorization")
+    if(!token) return res.json({message:"No token."})
+    try{
+        const decoded=jwt.verify(token,"QWERTYistheSecretKey")
+        req.logger=decoded
+        next();
+}
+catch(e){
+    res.json({message:"Invalid token"})
+}
+}
 
 app.post("/",async(req,res)=>{
     try{
@@ -247,6 +271,29 @@ catch(err){
     console.log("Error Occured During action movie")
 }
 })
+app.post("/api/register",async(req,res)=>{
+    const {username,email,password}=req.body;
+    const isexist=await User.findOne({email})
+    if(isexist) return res.status(401).json({message:"User already Exists"})
+    
+    const hashedpassword=await bcrypt.hash(password,10)
+    const newUser=new User({username,email,password:hashedpassword})
+    await newUser.save()
+    res.json({message:"New User Registered successfully"})
+})
+app.post("/api/login",async(req,res)=>{
+    const {username,password}=req.body;
+    const user=await User.findOne({username})
+    if(!user) return res.status(401).json({message:"User not exist"})
+    
+    const check=await bcrypt.compare(password,user.password);
+    if(!check){
+        return res.status(401).json({message:"Wrong Password"})
+    }
+    const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
+    res.json({message:"Login Success",token})
+
+})
 
 app.get("/",async(req,res)=>{
     const allMovie=await Movie.find();
@@ -275,6 +322,13 @@ app.get("/api/series",async(req,res)=>{
 app.get("/api/romantic",async(req,res)=>{
     const allMovie=await Romantic.find();
     res.send(allMovie)
+})
+app.get("/api/profile",authMiddleware,async(req,res)=>{
+    const logger=req.logger.id
+    // console.log(logger)
+    const data=await User.findById(logger)
+    if(data) return res.json({data})
+    return res.json({message:"failed to fetch"})
 })
 
 

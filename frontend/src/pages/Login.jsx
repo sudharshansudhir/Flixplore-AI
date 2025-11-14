@@ -1,8 +1,10 @@
 import React from 'react'
 import Logincard from '../components/Logincard'
 
-export const Login = () => {
+const Login = () => {
   return (
     <Logincard/>
   )
 }
+
+export default Login

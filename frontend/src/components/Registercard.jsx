@@ -4,30 +4,27 @@ import { AppContext } from '../context/Context'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 // #2626266b
-const Logincard = () => {
+const Registercard = () => {
     const {login,setlogin,username,setusername,email,setemail,password,setpassword}=useContext(AppContext)
 
     const navigate=useNavigate()
 
     async function checkrule(e){
         e.preventDefault();
-        if( !username || !password){
+        if(!email || !username || !password){
             alert("The field Should not be empty")
         }
         else{
             try{
-            const response=await axios.post("http://localhost:3000/api/login",{username,password})
-            
-            localStorage.setItem("token",response.data.token)
-                alert("Login SUCCESSFUL")
-            setlogin(true)
-            // console.log("response is :",response)
+            const response=await axios.post("http://localhost:3000/api/register",{username,email,password})
+            alert("Register SUCCESSFUL")
+                setlogin(true)
+            console.log("Register response: ",response.data.message)
             navigate("/")
             }
             catch(e){
                 alert(e.response.data.message)
             }
-            
         }
     }
 
@@ -41,8 +38,8 @@ const Logincard = () => {
             <div className="w-full flex flex-col items-center justify-center">
         
                 <form className=" md:w-96 w-80 flex flex-col items-center justify-center">
-                    <h2 className="text-4xl text-[#f83838ff] font-medium">Sign In</h2>
-                    <p className="text-sm text-[#f83838ff] mt-3">Welcome back! Please sign in to continue</p>
+                    <h2 className="text-4xl text-[#f83838ff] font-medium">Sign Up</h2>
+                    <p className="text-sm text-[#f83838ff] mt-3">Welcome! Please sign up to continue</p>
         
                     {/* <button type="button" className="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full">
                         <img src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg" alt="googleLogo" />
@@ -60,13 +57,13 @@ const Logincard = () => {
         </svg>
                         <input type="text" onChange={(e)=>setusername(e.target.value)}  placeholder="Enter your Name" className="bg-transparent text-white placeholder-gray-500/80 outline-none text-sm w-full h-full" required />                 
                     </div>
-                    {/* <div className="flex mt-8 items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                    <div className="flex mt-8 items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
                         <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M0 .55.571 0H15.43l.57.55v9.9l-.571.55H.57L0 10.45zm1.143 1.138V9.9h13.714V1.69l-6.503 4.8h-.697zM13.749 1.1H2.25L8 5.356z" fill="#6B7280"/>
                         </svg>
                         <input type="email" onChange={(e)=>setemail(e.target.value)}  placeholder="Email id" className="bg-transparent text-white placeholder-gray-500/80 outline-none text-sm w-full h-full" required />                 
                     </div>
-         */}
+        
                     <div className="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
                         <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z" fill="#6B7280"/>
@@ -83,9 +80,9 @@ const Logincard = () => {
                     </div>
         
                     <button onClick={(e)=>checkrule(e)} className="mt-8 w-full py-3 text-center rounded-full text-white bg-[#c10404ff] hover:opacity-90 transition-opacity">
-                        Login
+                        Register
                     </button>
-                    <p className="text-[#f83838ff] text-sm mt-4">Don’t have an account? <a className="text-white hover:underline" href="#" onClick={()=>navigate("/signup")}>Sign up</a></p>
+                    <p className="text-[#f83838ff] text-sm mt-4">Already have an account? <a className="text-white hover:underline" onClick={()=>navigate("/signin")}>Sign in</a></p>
                 </form>
             </div>
     </div>
@@ -94,4 +91,4 @@ const Logincard = () => {
   )
 }
 
-export default Logincard
+export default Registercard

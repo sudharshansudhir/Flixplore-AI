@@ -9,7 +9,8 @@ import Series from './pages/Series'
 import Search from './pages/Search'
 import Navbar from './components/Navbar'
 import Watch from './pages/Watch'
-import { Login } from './pages/Login'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 const App = () => {
 
@@ -25,7 +26,8 @@ const App = () => {
         <Route path='/movies' Component={Movies}/>
         <Route path='/watch' Component={Watch}/>
         <Route path='/series' Component={Series}/>
-        <Route path='/login' Component={Login}/>
+        <Route path='/signup' Component={Register}/>
+        <Route path='/signin' Component={Login}/>
         <Route path='/search' element={<Search query={query}/>}/>
       </Routes>
     </div>

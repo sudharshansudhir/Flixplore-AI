@@ -143,7 +143,7 @@ const Bot = () => {
       {open && (
         <div className="mb-4 w-[92vw] max-w-[380px] h-[520px] bg-[#0f0f10] text-white shadow-2xl rounded-2xl border border-red-600 flex flex-col overflow-hidden">
           <div className="bg-red-600 text-white p-3 text-center text-lg font-bold">
-            Flixplore-AI
+            Flixplore-Bot
           </div>
 
           <div className="flex-1 p-3 overflow-y-auto text-sm space-y-3 flex flex-col">
@@ -184,10 +184,10 @@ const Bot = () => {
       {/* Floating Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center border-2 border-red-600 rounded-full p-4 bg-black w-[60px] h-[60px] text-red-500 font-bold shadow-xl"
+        className="flex text-2xl items-center justify-center border-2 border-red-600 rounded-full p-4 bg-black w-[100px] h-[100px] text-red-500 font-bold shadow-xl"
         aria-label="Open Flixplore AI"
       >
-        AI
+        ASK DUDE
       </button>
     </div>
   );

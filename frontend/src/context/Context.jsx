@@ -4,6 +4,7 @@ export const AppContext=createContext()
 
 export const AppProvider=({children})=>{
     const [list,setlist]=useState([])
+    const [userlist,setuserlist]=useState([])
     const [currfilm,setcurrfilm]=useState(null)
     const [login,setlogin]=useState(false)
     const [email,setemail]=useState("")
@@ -12,7 +13,7 @@ export const AppProvider=({children})=>{
     
   const [Wishlistind,setWishlistind]=useState([])
     return(
-        <AppContext.Provider value={{list,email,setemail,username,setusername,setlist,password,setpassword,login,setlogin,Wishlistind,setWishlistind,currfilm,setcurrfilm}}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{list,email,setemail,username,setusername,setlist,password,setpassword,login,setlogin,Wishlistind,setWishlistind,currfilm,setcurrfilm,userlist,setuserlist}}>{children}</AppContext.Provider>
 
     )
 }

@@ -3,6 +3,7 @@ import React, { useState,useContext } from "react";
 import { AppContext } from "../context/Context";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import axios from "axios";
 // import { set } from "mongoose";
 
 const Allseries = () => {
@@ -10,7 +11,7 @@ const Allseries = () => {
   const [Movies,setMovies] = useState();
   // store filtered list (what user sees)
   var [Filtered, setFiltered] = useState();
-      const {list,setlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
+      const {list,login,setlist,setcurrfilm,userlist,setuserlist,Wishlistind,setWishlistind} = useContext(AppContext)
       if(Filtered){        
   Filtered=Filtered.filter((item)=>(item.episodes_count))
       }
@@ -55,7 +56,54 @@ const navigate=useNavigate()
     .then((values)=>values.json())
     .then((value)=>{setMovies(value);setFiltered(value)})
     .catch((e)=>console.log("Error occured during fetching action movies"))
+
+
+    async function fetchwishlist(){
+      try{
+        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      })
+      setuserlist(wishlist.data)
+      console.log(wishlist.data)
+      }
+      catch(e){
+        if(e.response?.status==401){
+          console.log("Failed to connect")
+        }
+      }
+
+    }
+
+    fetchwishlist()
   },[])
+
+   async function addlist(item){
+    console.log("...")
+    const data=await axios.post("http://localhost:3000/api/wishlist",{wishlist:item},{
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
+    })
+    try{
+        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      })
+      setuserlist(wishlist.data)
+      console.log(wishlist.data)
+      }
+      catch(e){
+        if(e.response?.status==401){
+          console.log("Failed to connect")
+        }
+      }
+    console.log(data)
+    
+  }
+
 
   return (
     <div className="relative">
@@ -105,18 +153,23 @@ const navigate=useNavigate()
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 
     <div className="p-4 w-full">
-          {Wishlistind.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-              Go to Wishlist
-            </button>
-          ) : (<button  onClick={() => { setlist([...list, item.name]);
-             setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-              Add to Wishlist
-            </button>
-          )}
-    
-          <NavLink to="/watch" onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-            Watch Now
-          </NavLink>
+          {login?<div>
+                  {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                    Go to Wishlist
+                  </button>
+                ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
+                   setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                    Add to Wishlist
+                  </button>
+                )}
+                
+          
+                <NavLink to="/watch" onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+                        Watch Now
+                      </NavLink></div>:<div>
+                        <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+                        Login to Watch
+                      </NavLink></div>}
         </div>
   </div>
             </div>

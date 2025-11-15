@@ -17,13 +17,14 @@ const Registercard = () => {
         else{
             try{
             const response=await axios.post("http://localhost:3000/api/register",{username,email,password})
+            localStorage.setItem("token",response.data.token)
             alert("Register SUCCESSFUL")
                 setlogin(true)
-            console.log("Register response: ",response.data.message)
+            console.log("Register response: ",response)
             navigate("/")
             }
             catch(e){
-                alert(e.response.data.message)
+                console.log(e)
             }
         }
     }

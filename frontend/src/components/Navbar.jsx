@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import logo from "../assets/logo.png"
 import { BsSearch, BsFillPersonFill  } from "react-icons/bs";
 import {NavLink, useNavigate} from 'react-router-dom'
@@ -19,7 +19,15 @@ const Navbar = ({setquery}) => {
     navigate("/search")
   }
 
- 
+ useEffect(()=>{
+  const islogin=localStorage.getItem("token")
+  if(islogin){
+    setlogin(true)
+  }
+  else{
+    setlogin(false)
+  }
+ },[])
 
   return (
     <div className='relative'>

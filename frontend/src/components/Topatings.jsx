@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useState } from 'react'
-import {allmovies} from "../assets/data.json"
+import React, { useContext, useEffect, useRef, useState } from 'react'
+// import {allmovies} from "../assets/data.json"
 import { ChevronRight,ChevronLeft } from "lucide-react";
 import { AppContext } from '../context/Context';
 import { NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Topmovies = () => {
-  const [Movies,setMovies]=useState(allmovies)
-  const {list,setlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
-  const filteredmovies=Movies.filter((item)=>(item.ratings>8))
+  const [Movies,setMovies]=useState()
+  const {list,setlist,login,setuserlist,userlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
+  // const filteredmovies=Movies.filter((item)=>(item.ratings>8))
 
   const [aboutindex,setaboutindex]=useState(null)
 
@@ -25,6 +26,61 @@ const Topmovies = () => {
       scrollRef.current.scrollBy({ left: -500, behavior: "smooth" });
     }
   };
+
+  useEffect(()=>{
+    async function fetchdata(){
+      const data=await axios.get("http://localhost:3000/")
+      const highrating=data.data
+      const filteredratings=highrating.filter((item)=>{return item.ratings>8})
+      setMovies(filteredratings)
+      console.log(highrating)
+    }
+    fetchdata()
+     async function fetchwishlist(){
+      try{
+        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      })
+      setuserlist(wishlist.data)
+      console.log(wishlist.data)
+      }
+      catch(e){
+        if(e.response?.status==401){
+          console.log("Failed to connect",e)
+        }
+      }
+
+    }
+
+    fetchwishlist()
+  },[])
+
+  async function addlist(item){
+    console.log("...")
+    const data=await axios.post("http://localhost:3000/api/wishlist",{wishlist:item},{
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
+    })
+    try{
+        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      })
+      setuserlist(wishlist.data)
+      console.log(wishlist.data)
+      }
+      catch(e){
+        if(e.response?.status==401){
+          console.log("Failed to connect")
+        }
+      }
+    console.log(data)
+    
+  }
 // console.log(list)
 
   return (
@@ -44,18 +100,23 @@ const Topmovies = () => {
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 
     <div className="p-4 w-full">
-          {Wishlistind.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-              Go to Wishlist
-            </button>
-          ) : (<button  onClick={() => { setlist([...list, item.name]);
-             setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-              Add to Wishlist
-            </button>
-          )}
-    
-          <NavLink to="/watch" onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-            Watch Now
-          </NavLink>
+          {login?<div>
+        {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+          Go to Wishlist
+        </button>
+      ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
+         setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+          Add to Wishlist
+        </button>
+      )}
+      
+
+      <NavLink to="/watch" onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+              Watch Now
+            </NavLink></div>:<div>
+              <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+              Login to Watch
+            </NavLink></div>}
         </div>
   </div>
 </div>

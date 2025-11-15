@@ -2,26 +2,27 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../context/Context'
 // import allmovies from "../assets/data.json"
 import { NavLink } from 'react-router-dom'
+import axios from 'axios'
 
 const MyList = () => {
 
-    const {Wishlistind,list,setcurrfilm}=useContext(AppContext)
+    const {setcurrfilm}=useContext(AppContext)
     const [Movies,setMovies]=useState()
-    var filteredmovies;
-if(Movies){
-      filteredmovies=Movies.filter((item)=>list.includes(item.name))
-      console.log(filteredmovies,Movies,list,Wishlistind)
-      console.log("All movies:",Movies)
-      console.log("Filtered movies:",filteredmovies)
-      console.log("Wishlist indices:",Wishlistind)
-      console.log("List:",list)
-    }
 
     useEffect(()=>{
-  fetch("http://localhost:3000/")
-  .then((values)=>values.json())
-  .then((value)=>setMovies(value))
-  .catch((e)=>console.log("Error occured during fetching action movies"))
+      
+      async function fetchdata(){
+        const alldata=await axios.get("http://localhost:3000/")
+        const data=await axios.get("http://localhost:3000/api/wishlist",{
+          headers:{
+            Authorization:localStorage.getItem("token")
+          }
+        })
+        const mylist=alldata.data.filter((item)=>{return data.data.includes(item.name)})
+        setMovies(mylist)
+        console.log(mylist)
+      }
+      fetchdata()
 },[])
 
 
@@ -29,7 +30,7 @@ if(Movies){
 
   return (
     <div className='pt-24 flex justify-start items-center gap-2 flex-wrap'>
-        {(filteredmovies&&filteredmovies.length>0) ? filteredmovies.map((item,index)=>{
+        {(Movies&&Movies.length>0) ? Movies.map((item,index)=>{
            return <div key={index} className='w-[200px] h-[250px] rounded-md m-2 border border-[#ff0000ff]'>
                 <img src={item.thumbnail} alt={item.name} className='w-full h-[80%]'/>
                 {/* <div className='text-center text-2xl'>{item.name}</div> */}

@@ -16,13 +16,22 @@ const ProfileCard = () => {
 
   useEffect(()=>{
     async function fetchUser(){
-      console.log("...")
-    const user=await axios.get("http://localhost:3000/api/profile",{
-      headers:{
-        Authorization:localStorage.getItem("token")
+      try{
+        const user=await axios.get("http://localhost:3000/api/profile",{
+              headers:{
+                Authorization:localStorage.getItem("token")
+              }
+        })
+        setuserdata([user.data.data])
       }
-    })
-    setuserdata([user.data.data])
+      catch(e){
+        if(e.response?.status==401){
+        localStorage.removeItem("token");
+      setuserdata([])
+      window.location.href = "/signin";
+      }
+    }
+    
   }
   fetchUser()
     
@@ -91,7 +100,7 @@ const ProfileCard = () => {
           <button onClick={() => setEditMode(true)} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
             Edit Profile
           </button>
-          <button  onClick={() =>{ setlogin(false);navigate('/signin')}} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
+          <button  onClick={() =>{setuserdata([]);  localStorage.removeItem("token");setlogin(false);navigate('/signin')}} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
             Logout
           </button></>
         )}

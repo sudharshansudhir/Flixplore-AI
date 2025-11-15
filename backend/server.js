@@ -20,7 +20,9 @@ const userSchema=new mongoose.Schema({
         type:String,
         unique:true,
     },
-    password:{type:String}
+    password:{type:String},
+    wishlist:[{type:String}]
+
 
 })
 const movieSchema=new mongoose.Schema({
@@ -133,15 +135,15 @@ app.use(cors())
 app.use(express.json());
 
 const authMiddleware=(req,res,next)=>{
-    const token=req.header("Authorization")
-    if(!token) return res.json({message:"No token."})
+    const token=req.header("Authorization")?.replace("Bearer ", "");
+    if(!token) return res.status(401).json({message:"No token."})
     try{
         const decoded=jwt.verify(token,"QWERTYistheSecretKey")
         req.logger=decoded
         next();
 }
 catch(e){
-    res.json({message:"Invalid token"})
+    return res.status(401).json({message:"Invalid token"})
 }
 }
 
@@ -279,6 +281,9 @@ app.post("/api/register",async(req,res)=>{
     const hashedpassword=await bcrypt.hash(password,10)
     const newUser=new User({username,email,password:hashedpassword})
     await newUser.save()
+    const user=await User.findOne({email})
+    const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
+    res.json({message:"Login Success",token})
     res.json({message:"New User Registered successfully"})
 })
 app.post("/api/login",async(req,res)=>{
@@ -293,6 +298,19 @@ app.post("/api/login",async(req,res)=>{
     const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
     res.json({message:"Login Success",token})
 
+})
+app.post("/api/wishlist",authMiddleware,async(req,res)=>{
+    const {wishlist,headers}=req.body;
+    const userID=req.logger.id;
+    const user=await User.findById(userID)
+    if(!user) return res.status(401).json({message:"user Not found"})
+    if(user.wishlist.includes(wishlist)){
+        return res.status(401).json({message:"Movie already in list"})
+    }
+    user.wishlist.push(wishlist)
+    await user.save()
+    console.log("ADDED: ",user.wishlist)
+    res.json("Successfully added",user.wishlist)
 })
 
 app.get("/",async(req,res)=>{
@@ -330,7 +348,14 @@ app.get("/api/profile",authMiddleware,async(req,res)=>{
     if(data) return res.json({data})
     return res.json({message:"failed to fetch"})
 })
-
+app.get("/api/wishlist",authMiddleware,async(req,res)=>{
+    const userID=req.logger.id
+    if(!userID) return res.status(401).json({message:"Login needed for wishlist"})
+    const data=await User.findById(userID)  
+    if(data) return res.json(data.wishlist)
+    console.log("..from server")
+    return res.status(401).json({message:"Unable to fetch"})
+})
 
 
 

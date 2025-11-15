@@ -34,7 +34,7 @@ const MyList = () => {
            return <div key={index} className='w-[200px] h-[250px] rounded-md m-2 border border-[#ff0000ff]'>
                 <img src={item.thumbnail} alt={item.name} className='w-full h-[80%]'/>
                 {/* <div className='text-center text-2xl'>{item.name}</div> */}
-                <NavLink onClick={()=>setcurrfilm(item._id)}  to="/watch" className='block w-full text-center px-3 py-1 bg-[#ff0000ff] h-[20%]'>Watch Now</NavLink>
+                <NavLink onClick={()=>setcurrfilm(item.name)}  to={`/watch/${item.name}`} className='block w-full text-center px-3 py-1 bg-[#ff0000ff] h-[20%]'>Watch Now</NavLink>
                 {/* <NavLink    className="border   cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
                         Watch Now
                       </NavLink> */}

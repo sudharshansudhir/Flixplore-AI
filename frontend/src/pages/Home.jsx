@@ -25,7 +25,7 @@ const Home = () => {
       <Drama/>
       <Emotional/>
       <Topratings/>
-      {!login&&<Pricing/>}
+      {/* {login&&<Pricing/>} */}
       
       <Footer/>
     </div>

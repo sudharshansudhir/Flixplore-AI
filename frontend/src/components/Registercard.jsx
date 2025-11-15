@@ -72,14 +72,14 @@ const Registercard = () => {
                         <input type="password" onChange={(e)=>setpassword(e.target.value)}  required placeholder="Password" className="bg-transparent text-white placeholder-gray-500/80 outline-none text-sm w-full h-full"  />
                     </div>
         
-                    <div className="w-full flex items-center justify-between mt-8 text-white">
+                    {/* <div className="w-full flex items-center justify-between mt-8 text-white">
                         <div className="flex items-center gap-2">
                             <input className="h-5" type="checkbox" id="checkbox" />
                             <label className="text-sm" htmlFor="checkbox">Remember me</label>
                         </div>
                         <a className="text-sm underline" href="#">Forgot password?</a>
                     </div>
-        
+         */}
                     <button onClick={(e)=>checkrule(e)} className="mt-8 w-full py-3 text-center rounded-full text-white bg-[#c10404ff] hover:opacity-90 transition-opacity">
                         Register
                     </button>

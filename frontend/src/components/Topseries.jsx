@@ -106,7 +106,7 @@ async function addlist(item){
       )}
       
 
-      <NavLink to="/watch" onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+      <NavLink to={`/watch/${item.name}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
               Watch Now
             </NavLink></div>:<div>
               <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
@@ -137,11 +137,11 @@ export default Topseries
 //               <div className='text-2xl'>{item.name}</div>
 //               <div className='text-[16px]'>{item.ratings} Ratings from IMDB</div>
 //               <div className='p-4'>
-//                 {Wishlistind.includes(item._id)?
+//                 {Wishlistind.includes(item.name)?
 //                 <button onClick={()=>navigate("/wishlist")} className='text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-[100%]'>
 //                   Go to Wishlist
 //                   </button>:
-//                   <button onClick={()=>{setlist([...list,item._id]);setWishlistind([...Wishlistind,item._id])}} className='text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-[100%]'>
+//                   <button onClick={()=>{setlist([...list,item.name]);setWishlistind([...Wishlistind,item.name])}} className='text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-[100%]'>
 //                     Add to Wishlist
 //                     </button>}
 //                     <div className='border hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1 w-[100%] '>Watch Now</div>

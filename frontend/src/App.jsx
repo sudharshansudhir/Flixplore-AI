@@ -11,6 +11,7 @@ import Navbar from './components/Navbar'
 import Watch from './pages/Watch'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Bot from './components/Bot'
 
 const App = () => {
 
@@ -24,12 +25,13 @@ const App = () => {
         <Route path='/wishlist' Component={Wishlist}/>
         <Route path='/profile' Component={Profile}/>
         <Route path='/movies' Component={Movies}/>
-        <Route path='/watch' Component={Watch}/>
+        <Route path='/watch/:name' element={<Watch/>}/>
         <Route path='/series' Component={Series}/>
         <Route path='/signup' Component={Register}/>
         <Route path='/signin' Component={Login}/>
         <Route path='/search' element={<Search query={query}/>}/>
       </Routes>
+      <Bot/>
     </div>
   )
 }

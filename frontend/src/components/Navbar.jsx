@@ -62,6 +62,7 @@ const Navbar = ({setquery}) => {
       <NavLink className={({ isActive }) => isActive ? 'active-link-mob' : 'nav-hover-mob' }  to="/movies">Movies</NavLink>
       <NavLink className={({ isActive }) => isActive ? 'active-link-mob' : 'nav-hover-mob' }  to="/series">Series</NavLink>
       <NavLink className={({ isActive }) => isActive ? 'active-link-mob' : 'nav-hover-mob' }  to="/wishlist">MyList</NavLink>
+      {login?<NavLink className={({ isActive }) => isActive ? 'nav-hover active-link' : 'nav-hover' } to="/profile"><BsFillPersonFill/></NavLink>:<NavLink className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000]" to="/signin">Login</NavLink>}
     </div>
 }
 

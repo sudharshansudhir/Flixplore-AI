@@ -33,7 +33,7 @@ const Logincard = () => {
     }
 
   return (
-    <div className='flex mt-26 justify-center items-center'>
+    <div className='flex pt-26 px-8 mb-8 justify-center items-center'>
     <div className="flex justify-center border border-[#c10404ff] rounded-md bg-[#2626266b] p-4 gap-2 items-center">
             <div className="w-full h-full  hidden md:inline-block">
                 <img className="py-26" src={logo} alt="leftSideImage" />

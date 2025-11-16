@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const mongoose=require('mongoose')
 
-mongoose.connect(process.env.MONGO_URI)
+ mongoose.connect(process.env.MONGO_URI)
     .then(()=>{
         console.log("Mongo DB Connected Successfully")
     })
@@ -132,7 +132,10 @@ const Romantic=mongoose.model("Romantic",romanticSchema)
 const Series=mongoose.model("Series",seriesSchema)
 
 const app=express()
-app.use(cors())
+app.use(cors({
+  origin: ['https://flixplore-ai.vercel.app'] 
+}));
+// app.use(cors())
 app.use(express.json());
 
 const authMiddleware=(req,res,next)=>{

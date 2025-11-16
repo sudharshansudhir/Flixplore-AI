@@ -45,10 +45,10 @@ const ProfileCard = () => {
   console.log(userdata)
 
   return (
-    <div>
+    <div className='pt-16'>
 
       {userdata&&userdata.map((item)=>{
-        return <div className="mt-24 max-w-lg w-full bg-[#1e1e1e] text-white rounded-2xl shadow-lg border border-[#ff0000] p-8 mx-auto">
+        return <><div className="md:mt-14 mt-8 max-w-lg w-full bg-[#1e1e1e] text-white rounded-2xl shadow-lg border border-[#ff0000] p-8 mx-auto">
       <div className="flex flex-col items-center">
         <img src="https://i.pravatar.cc/150?img=3" alt="profile" className="w-28 h-28 rounded-full border-4 border-[#ff0000] mb-4" />
         <h2 className="text-3xl font-semibold mb-2">{item.username || "Guest User"}</h2>
@@ -107,7 +107,7 @@ const ProfileCard = () => {
         )}
       </div>
     </div>
-      })}
+      </>})}
     
     </div>
   );

@@ -3,6 +3,7 @@ import { AppContext } from '../context/Context'
 // import allmovies from "../assets/data.json"
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
+const API_BASE = import.meta.env.VITE_URI;
 
 const MyList = () => {
 
@@ -12,8 +13,8 @@ const MyList = () => {
     useEffect(()=>{
       
       async function fetchdata(){
-        const alldata=await axios.get("http://localhost:3000/")
-        const data=await axios.get("http://localhost:3000/api/wishlist",{
+        const alldata=await axios.get(`${API_BASE}/`)
+        const data=await axios.get(`${API_BASE}/api/wishlist`,{
           headers:{
             Authorization:localStorage.getItem("token")
           }

@@ -4,6 +4,7 @@ import { ChevronRight,ChevronLeft } from "lucide-react";
 import { AppContext } from '../context/Context';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_URI;
 
 const Topmovies = () => {
   const [Movies,setMovies]=useState()
@@ -29,7 +30,7 @@ const Topmovies = () => {
 
   useEffect(()=>{
     async function fetchdata(){
-      const data=await axios.get("http://localhost:3000/")
+      const data=await axios.get(`${API_BASE}/`)
       const highrating=data.data
       const filteredratings=highrating.filter((item)=>{return item.ratings>8})
       setMovies(filteredratings)
@@ -38,7 +39,7 @@ const Topmovies = () => {
     fetchdata()
      async function fetchwishlist(){
       try{
-        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
         headers:{
           Authorization:localStorage.getItem("token")
         }
@@ -59,13 +60,13 @@ const Topmovies = () => {
 
   async function addlist(item){
     console.log("...")
-    const data=await axios.post("http://localhost:3000/api/wishlist",{wishlist:item},{
+    const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
       }
     })
     try{
-        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
         headers:{
           Authorization:localStorage.getItem("token")
         }

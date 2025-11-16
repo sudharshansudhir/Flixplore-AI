@@ -4,6 +4,7 @@ import { AppContext } from '../context/Context'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 // #2626266b
+const API_BASE = import.meta.env.VITE_URI;
 const Logincard = () => {
     const {login,setlogin,username,setusername,email,setemail,password,setpassword}=useContext(AppContext)
 
@@ -16,7 +17,7 @@ const Logincard = () => {
         }
         else{
             try{
-            const response=await axios.post("http://localhost:3000/api/login",{username,password})
+            const response=await axios.post(`${API_BASE}/api/login`,{username,password})
             
             localStorage.setItem("token",response.data.token)
                 alert("Login SUCCESSFUL")

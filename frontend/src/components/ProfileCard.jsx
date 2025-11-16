@@ -3,6 +3,7 @@ import { AppContext } from '../context/Context';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_URI;
 
 const ProfileCard = () => {
   const [editMode, setEditMode] = useState(false);
@@ -17,7 +18,7 @@ const ProfileCard = () => {
   useEffect(()=>{
     async function fetchUser(){
       try{
-        const user=await axios.get("http://localhost:3000/api/profile",{
+        const user=await axios.get(`${API_BASE}/api/profile`,{
               headers:{
                 Authorization:localStorage.getItem("token")
               }

@@ -4,6 +4,7 @@ import axios from "axios";
 import { IoSend } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/Context"; // adjust path if needed
+const API_BASE = import.meta.env.VITE_URI;
 
 const Bot = () => {
   const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ const Bot = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3000/api/smartbot", { message: trimmed });
+      const res = await axios.post(`${API_BASE}/api/smartbot`, { message: trimmed });
 
       // text reply from backend
       const botText = res.data?.reply ?? "I couldn't find anything — try different keywords.";

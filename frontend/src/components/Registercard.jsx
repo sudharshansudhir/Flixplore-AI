@@ -3,6 +3,7 @@ import logo from "../assets/logo.png"
 import { AppContext } from '../context/Context'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+const API_BASE = import.meta.env.VITE_URI;
 // #2626266b
 const Registercard = () => {
     const {login,setlogin,username,setusername,email,setemail,password,setpassword}=useContext(AppContext)
@@ -16,7 +17,7 @@ const Registercard = () => {
         }
         else{
             try{
-            const response=await axios.post("http://localhost:3000/api/register",{username,email,password})
+            const response=await axios.post(`${API_BASE}/api/register`,{username,email,password})
             localStorage.setItem("token",response.data.token)
             alert("Register SUCCESSFUL")
                 setlogin(true)

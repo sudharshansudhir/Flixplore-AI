@@ -5,6 +5,7 @@ import { AppContext } from '../context/Context'
 
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_URI;
 
 const SearchResults = ({query}) => {
   
@@ -18,13 +19,13 @@ const SearchResults = ({query}) => {
 
         
        useEffect(()=>{
-  fetch("http://localhost:3000/")
+  fetch(`${API_BASE}/`)
   .then((values)=>values.json())
   .then((value)=>setallmovies(value))
   .catch((e)=>console.log("Error occured during fetching action movies"))
  async function fetchwishlist(){
       try{
-        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
         headers:{
           Authorization:localStorage.getItem("token")
         }
@@ -46,13 +47,13 @@ const SearchResults = ({query}) => {
 
 async function addlist(item){
     console.log("...")
-    const data=await axios.post("http://localhost:3000/api/wishlist",{wishlist:item},{
+    const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
       }
     })
     try{
-        const wishlist=await axios.get("http://localhost:3000/api/wishlist",{
+        const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
         headers:{
           Authorization:localStorage.getItem("token")
         }

@@ -5,7 +5,8 @@ const jwt=require("jsonwebtoken")
 require("dotenv").config();
 
 
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+// const { default: Movies } = require('../frontend/src/pages/Movies');
 
  mongoose.connect(process.env.MONGO_URI)
     .then(()=>{
@@ -22,7 +23,11 @@ const userSchema=new mongoose.Schema({
         unique:true,
     },
     password:{type:String},
-    wishlist:[{type:String}]
+    wishlist:[{type:String}],
+    createdAt:{
+      type:String,
+      default:()=> new Date().toISOString().split("T")[0]
+    }
 
 
 })
@@ -132,10 +137,10 @@ const Romantic=mongoose.model("Romantic",romanticSchema)
 const Series=mongoose.model("Series",seriesSchema)
 
 const app=express()
-app.use(cors({
-  origin: ['https://flixplore-ai.vercel.app'] 
-}));
-// app.use(cors())
+// app.use(cors({
+//   origin: ['https://flixplore-ai.vercel.app'] 
+// }));
+app.use(cors())
 app.use(express.json());
 
 const authMiddleware=(req,res,next)=>{
@@ -150,6 +155,22 @@ catch(e){
     return res.status(401).json({message:"Invalid token"})
 }
 }
+// const authMiddleware=(req,res,next)=>{
+//     const token=req.header("Authorization")?.replace("Bearer ", "");
+//     if(!token) return res.status(401).json({message:"No token."})
+//     try{
+//         const decoded=jwt.verify(token,"QWERTYistheSecretKey")
+//         req.logger=decoded
+//         next();
+// }
+// catch(e){
+//     return res.status(401).json({message:"Invalid token"})
+// }
+// }
+
+
+
+//----------------------------------------Post Routes---------------------
 
 app.post("/",async(req,res)=>{
     try{
@@ -296,16 +317,31 @@ app.post("/api/login",async(req,res)=>{
     const user=await User.findOne({username})
     if(!user) return res.status(401).json({message:"User not exist"})
     
-    const check=await bcrypt.compare(password,user.password);
+    const check=bcrypt.compare(password, user.password);
     if(!check){
         return res.status(401).json({message:"Wrong Password"})
     }
     const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
     res.json({message:"Login Success",token})
+})
 
+app.post("/api/admin/login",async(req,res)=>{
+  const id=req.body.adminID
+  const password=req.body.password
+  const defaultadmin={
+    adminID:process.env.adminID,
+    adminPassword:process.env.adminPassword
+  }
+  console.log(id,password)
+
+  if(id==defaultadmin.adminID && password==defaultadmin.adminPassword){
+    console.log("You are ADMIN")
+    const token=jwt.sign({id:defaultadmin.adminID},"QWERTYistheSecretKey")
+   return res.send(token)
+  }
 })
 app.post("/api/wishlist",authMiddleware,async(req,res)=>{
-    const {wishlist,headers}=req.body;
+    const {wishlist}=req.body;
     const userID=req.logger.id;
     const user=await User.findById(userID)
     if(!user) return res.status(401).json({message:"user Not found"})
@@ -541,13 +577,7 @@ app.post("/api/smartbot", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
+// ----------------------------------------GET ROUTES...............
 
 app.get("/",async(req,res)=>{
     const allMovie=await Movie.find();
@@ -589,8 +619,91 @@ app.get("/api/wishlist",authMiddleware,async(req,res)=>{
     if(!userID) return res.status(401).json({message:"Login needed for wishlist"})
     const data=await User.findById(userID)  
     if(data) return res.json(data.wishlist)
-    console.log("..from server")
+    // console.log("..from server")
     return res.status(401).json({message:"Unable to fetch"})
+})
+
+app.get("/api/admin/movies",authMiddleware,async(req,res)=>{
+  const id=req.logger.id
+  // console.log(id)
+
+  if(id==process.env.adminID){
+    const movies=await Movie.find()
+    const users=await User.find()
+    if(!movies || !users) return res.send({message:"No data found"})
+    res.send({movies,users})
+  }
+  // else{
+  //   res.send({message:"Invalid admin request"})
+  // }
+})
+
+
+
+//----------------------------------------Patch Routes-----------------------
+app.patch("/api/profile",authMiddleware,async(req,res)=>{
+  const updated=req.body.payload;
+  const user=await User.findByIdAndUpdate(req.body.editno,{$set:updated},{new:true})
+  if(!user){ 
+    return res.send({message:"User not found"})
+  } 
+  // await user.save();
+  return res.send({message:"Profile Updated Successfully",user})
+})
+
+app.patch("/",async(req,res)=>{
+  const current=req.body.current
+  console.log(current)
+  if(current){
+    const data=await Movie.findByIdAndUpdate(current._id,{$set:current},{new:true})
+  if(!data){ 
+    console.log("Done")
+    console.log(data)
+    return res.send({message:"data not found"})
+  } 
+  // await data.save();
+  return res.send({message:"Profile Updated Successfully",data})
+}
+})
+
+
+
+//-----------------------------------------Delete Routes----------------------
+app.delete("/api/wishlist/:id",authMiddleware,async(req,res)=>{
+  const id=req.params.id;
+  const data=await User.findById(req.logger.id)
+  if(!data) return res.send({message:"User not found"})
+  console.log(data.wishlist)
+  console.log(id) 
+
+  data.wishlist=data.wishlist.filter((item)=>item!=id)
+  console.log(data.wishlist)
+  await data.save()
+  return res.send({message:"Removed from wishlist",data})
+})
+
+app.delete("/api/profile/:id",authMiddleware,async(req,res)=>{
+  const id=req.params.id;
+  const data=await User.findByIdAndDelete(id)
+  if(!data) return res.send({message:"User not found"})
+  return res.send({message:"Profile Deleted Successfully"})
+})
+
+app.delete("/api/admin/movie/:id",authMiddleware,async(req,res)=>{
+  const id=req.params.id
+  console.log("....")
+  const movie= await Movie.findByIdAndDelete(id)
+  console.log(movie)
+  return res.send({message:"Deleted Successfully"})
+
+})
+app.delete("/api/admin/user/:id",authMiddleware,async(req,res)=>{
+  const id=req.params.id
+  console.log("....")
+  const user= await User.findByIdAndDelete(id)
+  console.log(user)
+  return res.send({message:"Deleted Successfully"})
+
 })
 
 

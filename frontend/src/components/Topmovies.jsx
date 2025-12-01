@@ -9,9 +9,9 @@ const API_BASE = import.meta.env.VITE_URI;
 
 const Topmovies = () => {
   const [Movies,setMovies]=useState()
-  const {list,setlist,login,userlist,setuserlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
+  const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
 
-  const [aboutindex,setaboutindex]=useState(null)
+  // const [aboutindex,setaboutindex]=useState(null)
 
   const navigate=useNavigate()
 
@@ -56,7 +56,6 @@ useEffect(()=>{
 
 
 async function addlist(item){
-    console.log("...")
     const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
@@ -69,14 +68,12 @@ async function addlist(item){
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
           console.log("Failed to connect")
         }
       }
-    console.log(data)
     
   }
 
@@ -98,22 +95,23 @@ async function addlist(item){
 
     <div className="p-4 w-full">
       {login?<div>
-        {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-          Go to Wishlist
-        </button>
-      ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
-         setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-          Add to Wishlist
-        </button>
-      )}
-      
-
-      <NavLink to={`/watch/${item.name}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-              Watch Now
-            </NavLink></div>:<div>
-              <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-              Login to Watch
-            </NavLink></div>}
+                {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                  Go to Wishlist
+                </button>
+              ) : (<button  onClick={() => {addlist(item.name);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                  Add to Wishlist
+                </button>
+              )}
+                  <NavLink to={`/watch/${item.name}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+                        Watch Now
+                  </NavLink>
+            </div> : 
+            
+            <div>
+                  <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+                    Login to Watch
+                  </NavLink>
+            </div>}
     </div>
   </div>
 </div>

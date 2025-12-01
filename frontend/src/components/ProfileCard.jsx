@@ -1,19 +1,27 @@
 import React, { useContext, useState } from 'react'
 import { AppContext } from '../context/Context';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from 'axios';
 const API_BASE = import.meta.env.VITE_URI;
 
 const ProfileCard = () => {
   const [editMode, setEditMode] = useState(false);
-  const { username, email,setlogin, setusername, setemail } = useContext(AppContext);
+  const {setlogin } = useContext(AppContext);
   const [userdata,setuserdata]=useState([])
   const [plan, setPlan] = useState("Premium");
   const [validity, setValidity] = useState("31 Dec 2025");
   const navigate=useNavigate()
+  const [username,setusername]=useState("")
+  const[email,setemail]=useState("")
+  // const [editId,seteditId]=useState()
 
   const handleSave = () => setEditMode(false);
+function validitydate(datenow){
+  const date = new Date(datenow);
+  date.setMonth(date.getMonth() + 1);
+  return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+}
 
   useEffect(()=>{
     async function fetchUser(){
@@ -29,20 +37,53 @@ const ProfileCard = () => {
         if(e.response?.status==401){
         localStorage.removeItem("token");
       setuserdata([])
-      window.location.href = "/signin";
+      // window.location.href = "/signin";
+      navigate("/signin")
       }
     }
     
   }
   fetchUser()
-    
-
-
-
-
   },[])
 
-  console.log(userdata)
+  async function deleteprofile(delId){
+    try{
+      const data=await axios.delete(`${API_BASE}/api/profile/${delId}`,{
+        headers:{
+          Authorization:localStorage.getItem("token") 
+    }})
+    alert("Profile Deleted Successfully")
+    setuserdata([])
+    localStorage.removeItem("token");
+    setlogin(false);
+    navigate('/signin')
+  }
+  catch(e){
+    console.log(e)
+  }
+  }
+  // console.log(userdata)
+  async function edit(editId){
+    const payload={}
+    try{
+      if(username) payload.username=username;
+      if(email) payload.email=email;
+      const data=await axios.patch(`${API_BASE}/api/profile`,{editno:editId,payload},{
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
+      
+    })
+    console.log(data)
+    setEditMode(false);
+    alert("Edited Successfully")
+    }
+    catch(e){
+      alert("Error in Editing" )
+      console.log(e)
+    }
+    
+  }
 
   return (
     <div className='pt-16'>
@@ -53,7 +94,7 @@ const ProfileCard = () => {
         <img src="https://i.pravatar.cc/150?img=3" alt="profile" className="w-28 h-28 rounded-full border-4 border-[#ff0000] mb-4" />
         <h2 className="text-3xl font-semibold mb-2">{item.username || "Guest User"}</h2>
         <p className="text-gray-400 text-sm mb-4">
-          {plan} Plan — Valid till {validity}
+          {plan} Plan — Valid till {validitydate(item.createdAt)}
         </p>
       </div>
 
@@ -64,7 +105,7 @@ const ProfileCard = () => {
             <input
               type="text"
               value={item.username}
-              onChange={(e) => setname(e.target.value)}
+              onChange={(e) => {item.username=e.target.value;setusername(e.target.value)}}
               className="w-full bg-[#2b2b2b] text-white border border-[#ff0000] rounded-md p-2"
             />
           ) : (
@@ -78,7 +119,7 @@ const ProfileCard = () => {
             <input
               type="email"
               value={item.email}
-              onChange={(e) => setemail(e.target.value)}
+              onChange={(e) => {item.email=e.target.value;setemail(e.target.value)}}
               className="w-full bg-[#2b2b2b] text-white border border-[#ff0000] rounded-md p-2"
             />
           ) : (
@@ -90,7 +131,10 @@ const ProfileCard = () => {
       <div className="flex justify-end gap-4 mt-6">
         {editMode ? (
           <>
-            <button onClick={handleSave} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
+            <button onClick={()=>deleteprofile(item._id)} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
+              Delete Profile
+            </button>
+            <button onClick={()=>edit(item._id)} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
               Save
             </button>
             <button onClick={() => setEditMode(false)} className="border border-[#ff0000] text-[#ff0000] px-4 py-2 rounded-md hover:bg-[#2b2b2b] transition">
@@ -98,6 +142,9 @@ const ProfileCard = () => {
             </button>
           </>
         ) : (<>
+          <button onClick={()=>deleteprofile(item._id)} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
+              Delete Profile
+            </button>
           <button onClick={() => setEditMode(true)} className="bg-[#ff0000] hover:bg-[#ff3333] text-white px-4 py-2 rounded-md transition">
             Edit Profile
           </button>

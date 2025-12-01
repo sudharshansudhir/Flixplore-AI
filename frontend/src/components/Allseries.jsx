@@ -7,11 +7,9 @@ import axios from "axios";
 const API_BASE = import.meta.env.VITE_URI;
 
 const Allseries = () => {
-  // store full list
   const [Movies,setMovies] = useState();
-  // store filtered list (what user sees)
   var [Filtered, setFiltered] = useState();
-      const {list,login,setlist,setcurrfilm,userlist,setuserlist,Wishlistind,setWishlistind} = useContext(AppContext)
+      const {login,setcurrfilm,userlist,setuserlist} = useContext(AppContext)
       if(Filtered){        
   Filtered=Filtered.filter((item)=>(item.episodes_count))
       }
@@ -25,14 +23,13 @@ const Allseries = () => {
     applyFilters(genre, searchText);
   };
 const navigate=useNavigate()
-  // handle search input
-  const handleSearchChange = (e) => {
+
+const handleSearchChange = (e) => {
     const text = e.target.value.toLowerCase();
     setSearchText(text);
     applyFilters(selectedGenre, text);
-  };
+};
 
-  // main filter logic (runs both filters together)
   const applyFilters = (genre, text) => {
     let filtered = Movies;
 
@@ -66,7 +63,7 @@ const navigate=useNavigate()
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
+      // console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
@@ -80,7 +77,7 @@ const navigate=useNavigate()
   },[])
 
    async function addlist(item){
-    console.log("...")
+    // console.log("...")
     const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
@@ -93,28 +90,26 @@ const navigate=useNavigate()
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
+      // console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
           console.log("Failed to connect")
         }
       }
-    console.log(data)
+    // console.log(data)
     
   }
 
 
   return (
     <div className="relative">
-      {/* Top Filter Bar */}
       <div className="md:flex sticky md:top-20 top-7 px-4 md:px-8 bg-[#222121ff] w-full justify-between items-center py-2 z-20 md:py-4">
         <div className="flex justify-center md:justify-between items-center gap-2">
           <div className= "w-[50%] md:w-60 md:w-full text-lg md:text-2xl text-[#222121ff] my-2 py-1 px-2 md:my-4 md:py-2 md:px-4 bg-[#f60808ff] rounded-lg font-bold">
             All Series
           </div>
 
-          {/* Genre Dropdown */}
           <select
             id="category"
             name="category"
@@ -130,7 +125,6 @@ const navigate=useNavigate()
           </select>
         </div>
 
-        {/* Search Input */}
         <input
           type="text"
           name="search"
@@ -142,7 +136,6 @@ const navigate=useNavigate()
         />
       </div>
 
-      {/* Movie Grid */}
       <div className="flex flex-wrap mt-4 justify-center gap-6 px-6">
         {Filtered&&Filtered.length > 0 ? (
           Filtered.map((item, index) => (
@@ -157,8 +150,7 @@ const navigate=useNavigate()
                   {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
                     Go to Wishlist
                   </button>
-                ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
-                   setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                ) : (<button  onClick={() => {addlist(item.name)}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
                     Add to Wishlist
                   </button>
                 )}

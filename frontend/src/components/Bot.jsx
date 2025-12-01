@@ -20,6 +20,8 @@ const Bot = () => {
     msgEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
 
+  
+
   // push a message into messages state
   const pushMessage = (m) => setMessages((prev) => [...prev, m]);
 
@@ -152,7 +154,7 @@ const Bot = () => {
             <div className="flex flex-col gap-3">
               {messages.length === 0 && (
                 <div className="text-gray-400 text-sm">
-                  Try queries: "top 5 action films", "vijay movies", "list lokesh films", "all tamil series"
+                  Try queries: "action films", "vijay movies", "list lokesh films", "all tamil series"
                 </div>
               )}
 

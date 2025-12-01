@@ -6,7 +6,7 @@ import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 // #2626266b
 const Registercard = () => {
-    const {login,setlogin,username,setusername,email,setemail,password,setpassword}=useContext(AppContext)
+    const {setlogin,username,setusername,email,setemail,password,setpassword}=useContext(AppContext)
 
     const navigate=useNavigate()
 
@@ -21,7 +21,7 @@ const Registercard = () => {
             localStorage.setItem("token",response.data.token)
             alert("Register SUCCESSFUL")
                 setlogin(true)
-            console.log("Register response: ",response)
+            // console.log("Register response: ",response)
             navigate("/")
             }
             catch(e){
@@ -42,16 +42,7 @@ const Registercard = () => {
                 <form className=" md:w-96 w-80 flex flex-col items-center justify-center">
                     <h2 className="text-4xl text-[#f83838ff] font-medium">Sign Up</h2>
                     <p className="text-sm text-[#f83838ff] mt-3">Welcome! Please sign up to continue</p>
-        
-                    {/* <button type="button" className="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full">
-                        <img src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg" alt="googleLogo" />
-                    </button>
-        
-                    <div className="flex items-center gap-4 w-full my-5">
-                        <div className="w-full h-px bg-gray-300/90"></div>
-                        <p className="w-full text-nowrap text-sm text-[#f83838ff]">or sign in with email</p>
-                        <div className="w-full h-px bg-gray-300/90"></div>
-                    </div> */}
+
         
                     <div className="flex mt-8 items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
                         <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,14 +64,7 @@ const Registercard = () => {
                         <input type="password" onChange={(e)=>setpassword(e.target.value)}  required placeholder="Password" className="bg-transparent text-white placeholder-gray-500/80 outline-none text-sm w-full h-full"  />
                     </div>
         
-                    {/* <div className="w-full flex items-center justify-between mt-8 text-white">
-                        <div className="flex items-center gap-2">
-                            <input className="h-5" type="checkbox" id="checkbox" />
-                            <label className="text-sm" htmlFor="checkbox">Remember me</label>
-                        </div>
-                        <a className="text-sm underline" href="#">Forgot password?</a>
-                    </div>
-         */}
+
                     <button onClick={(e)=>checkrule(e)} className="mt-8 w-full py-3 text-center rounded-full text-white bg-[#c10404ff] hover:opacity-90 transition-opacity">
                         Register
                     </button>

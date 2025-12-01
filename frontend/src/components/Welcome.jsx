@@ -12,15 +12,13 @@ const Welcome = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // 👀 When video is visible -> play
             videoElement.play();
           } else {
-            // 👋 When video goes out of view -> pause
             videoElement.pause();
           }
         });
       },
-      { threshold: 0.5 } // 0.5 = at least 50% of video visible
+      { threshold: 0.5 } 
     );
 
     if (videoElement) {

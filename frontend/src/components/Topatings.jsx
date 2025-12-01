@@ -8,10 +8,8 @@ const API_BASE = import.meta.env.VITE_URI;
 
 const Topmovies = () => {
   const [Movies,setMovies]=useState()
-  const {list,setlist,login,setuserlist,userlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
-  // const filteredmovies=Movies.filter((item)=>(item.ratings>8))
+  const {login,setuserlist,userlist,setcurrfilm} = useContext(AppContext)
 
-  const [aboutindex,setaboutindex]=useState(null)
 
   const navigate=useNavigate()
 
@@ -45,7 +43,7 @@ const Topmovies = () => {
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
+      // console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
@@ -59,7 +57,7 @@ const Topmovies = () => {
   },[])
 
   async function addlist(item){
-    console.log("...")
+    // console.log("...")
     const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
@@ -72,14 +70,14 @@ const Topmovies = () => {
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
+      // console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
           console.log("Failed to connect")
         }
       }
-    console.log(data)
+    // console.log(data)
     
   }
 // console.log(list)
@@ -105,8 +103,7 @@ const Topmovies = () => {
         {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Go to Wishlist
         </button>
-      ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
-         setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+      ) : (<button  onClick={() => {addlist(item.name)}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Add to Wishlist
         </button>
       )}

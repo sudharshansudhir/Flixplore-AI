@@ -8,7 +8,7 @@ import axios from 'axios';
 const API_BASE = import.meta.env.VITE_URI;
 const Topseries = () => {
   const [Movies,setMovies]=useState()
-  const {list,setlist,login,userlist,setuserlist,setcurrfilm,Wishlistind,setWishlistind} = useContext(AppContext)
+  const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
 
   // const [aboutindex,setaboutindex]=useState(null)
 
@@ -54,7 +54,7 @@ useEffect(()=>{
 },[])
 
 async function addlist(item){
-    console.log("...")
+    // console.log("...")
     const data=await axios.post(`${API_BASE}/api/wishlist`,{wishlist:item},{
       headers:{
         Authorization:localStorage.getItem("token")
@@ -67,14 +67,14 @@ async function addlist(item){
         }
       })
       setuserlist(wishlist.data)
-      console.log(wishlist.data)
+      // console.log(wishlist.data)
       }
       catch(e){
         if(e.response?.status==401){
           console.log("Failed to connect")
         }
       }
-    console.log(data)
+    // console.log(data)
     
   }
 
@@ -99,8 +99,7 @@ async function addlist(item){
         {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Go to Wishlist
         </button>
-      ) : (<button  onClick={() => {addlist(item.name);setlist([...list, item.name]);
-         setWishlistind([...Wishlistind, item.name]);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+      ) : (<button  onClick={() => {addlist(item.name)}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
           Add to Wishlist
         </button>
       )}
@@ -131,23 +130,3 @@ export default Topseries
 
 // #222020ff #ff0000ff #222020af
 
-
-// <div key={index}  className='w-[200px] h-[230px] shrink-0 hover:scale-105' onMouseEnter={()=>setaboutindex(index)} onMouseLeave={()=>setaboutindex(null)}>    
-//              {aboutindex==index&&<div className='w-full absolute  flex justify-center flex-col items-center h-full bg-[#222020af]'>
-//               <div className='text-2xl'>{item.name}</div>
-//               <div className='text-[16px]'>{item.ratings} Ratings from IMDB</div>
-//               <div className='p-4'>
-//                 {Wishlistind.includes(item.name)?
-//                 <button onClick={()=>navigate("/wishlist")} className='text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-[100%]'>
-//                   Go to Wishlist
-//                   </button>:
-//                   <button onClick={()=>{setlist([...list,item.name]);setWishlistind([...Wishlistind,item.name])}} className='text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-[100%]'>
-//                     Add to Wishlist
-//                     </button>}
-//                     <div className='border hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1 w-[100%] '>Watch Now</div>
-//               </div>
-              
-//              </div>
-//              }<img key={index} src={item.thumbnail} alt={item.name} width={200} className='h-[220px] hover:absolute hover:opacity-[70%]' />
-                   
-//                 </div>

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 // import {allmovies} from "../assets/data.json"
-import { AppContext } from '../context/Context'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
@@ -11,14 +10,9 @@ const Screen = () => {
   useEffect(()=>{
     async function fetchdata(){
       const data=await axios.get(`${API_BASE}/`)
-      console.log(data)
       const movies=data.data
-      console.log(movies)
-      console.log(name)
       const found=movies.find(item=>String(item.name)==String(name))
-      console.log("found is" ,found)
       setfounded(found)
-      console.log("founded is ", founded)
     }
     fetchdata()
   },[name])

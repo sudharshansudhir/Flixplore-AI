@@ -10,10 +10,11 @@ export const AppProvider=({children})=>{
     const [email,setemail]=useState("")
     const [password,setpassword]=useState("")
     const [username,setusername]=useState("")
+    const [query,setquery]=useState("")
     
   const [Wishlistind,setWishlistind]=useState([])
     return(
-        <AppContext.Provider value={{list,email,setemail,username,setusername,setlist,password,setpassword,login,setlogin,Wishlistind,setWishlistind,currfilm,setcurrfilm,userlist,setuserlist}}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{list,email,query,setquery,setemail,username,setusername,setlist,password,setpassword,login,setlogin,Wishlistind,setWishlistind,currfilm,setcurrfilm,userlist,setuserlist}}>{children}</AppContext.Provider>
 
     )
 }

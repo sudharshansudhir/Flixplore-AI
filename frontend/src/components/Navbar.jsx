@@ -5,9 +5,10 @@ import {NavLink, useNavigate} from 'react-router-dom'
 import {GiHamburgerMenu} from 'react-icons/gi'
 import { AppContext } from '../context/Context';
 
-const Navbar = ({setquery}) => {
+
+const Navbar = () => {
   const [mobile,setmobile]=useState(false);
-  const {login,setlogin}=useContext(AppContext)
+  const {login,setlogin,setquery}=useContext(AppContext)
   // const [search,setsearch]=useState(false);
   function mobileview(){
     setmobile(!mobile)

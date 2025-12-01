@@ -3,10 +3,10 @@ import allmovies from "../assets/data.json"
 import SearchResults from '../components/SearchResults'
 import Footer from '../components/Footer'
 
-const Search = ({query}) => {
+const Search = () => {
   return (
     <>
-    <SearchResults query={query}/>
+    <SearchResults/>
     <Footer/>
     </>
   )

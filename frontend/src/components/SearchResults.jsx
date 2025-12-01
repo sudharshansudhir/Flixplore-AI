@@ -7,9 +7,9 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 const API_BASE = import.meta.env.VITE_URI;
 
-const SearchResults = ({query}) => {
+const SearchResults = () => {
   
-      const {list,setlist,login,userlist,setuserlist,Wishlistind,setcurrfilm,setWishlistind} = useContext(AppContext)
+      const {list,setlist,login,userlist,setuserlist,query,Wishlistind,setcurrfilm,setWishlistind} = useContext(AppContext)
       const navigate=useNavigate()
   const [allmovies,setallmovies]=useState()
  var Movieslist

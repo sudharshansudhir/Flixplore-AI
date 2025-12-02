@@ -68,7 +68,7 @@ const Adminlist = () => {
 
 
   return (
-    <div className='pt-24'>
+    <div className='pt-8'>
     <div className='text-3xl'>Welcome Admin,</div>
     <div className='flex mt-16 justify-center items-center'>
     <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#350707ff] py-4 px-2'>Movies List</div></div>

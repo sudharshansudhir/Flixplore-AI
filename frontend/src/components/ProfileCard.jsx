@@ -10,7 +10,7 @@ const ProfileCard = () => {
   const {setlogin } = useContext(AppContext);
   const [userdata,setuserdata]=useState([])
   const [plan, setPlan] = useState("Premium");
-  const [validity, setValidity] = useState("31 Dec 2025");
+  // const [validity, setValidity] = useState("31 Dec 2025");
   const navigate=useNavigate()
   const [username,setusername]=useState("")
   const[email,setemail]=useState("")

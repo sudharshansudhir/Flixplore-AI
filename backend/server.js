@@ -155,18 +155,22 @@ catch(e){
     return res.status(401).json({message:"Invalid token"})
 }
 }
-// const authMiddleware=(req,res,next)=>{
-//     const token=req.header("Authorization")?.replace("Bearer ", "");
-//     if(!token) return res.status(401).json({message:"No token."})
-//     try{
-//         const decoded=jwt.verify(token,"QWERTYistheSecretKey")
-//         req.logger=decoded
-//         next();
-// }
-// catch(e){
-//     return res.status(401).json({message:"Invalid token"})
-// }
-// }
+const adminauthMiddleware=(req,res,next)=>{
+    const token=req.header("Authorization")?.replace("Bearer ", "");
+    if(!token) return res.status(401).json({message:"No token."})
+    try{
+        const decoded1=jwt.verify(token,"adminkey")
+        // console.log("...",decoded1)
+        if(!decoded1.isAdmin){
+          return res.status(401).json({message:"You are not Admin"})
+        }
+        req.logger=decoded1
+        next();
+}
+catch(e){
+    return res.status(401).json({message:"Invalid token"})
+}
+}
 
 
 
@@ -336,8 +340,9 @@ app.post("/api/admin/login",async(req,res)=>{
 
   if(id==defaultadmin.adminID && password==defaultadmin.adminPassword){
     console.log("You are ADMIN")
-    const token=jwt.sign({id:defaultadmin.adminID},"QWERTYistheSecretKey")
-   return res.send(token)
+    const token=jwt.sign({isAdmin:true,id:defaultadmin.adminID},"adminkey")
+    // const isAdmin=jwt.sign({isAdmin:true},"admintrue")
+   return res.send({token})
   }
 })
 app.post("/api/wishlist",authMiddleware,async(req,res)=>{
@@ -623,7 +628,7 @@ app.get("/api/wishlist",authMiddleware,async(req,res)=>{
     return res.status(401).json({message:"Unable to fetch"})
 })
 
-app.get("/api/admin/movies",authMiddleware,async(req,res)=>{
+app.get("/api/admin/movies",adminauthMiddleware,async(req,res)=>{
   const id=req.logger.id
   // console.log(id)
 
@@ -651,7 +656,7 @@ app.patch("/api/profile",authMiddleware,async(req,res)=>{
   return res.send({message:"Profile Updated Successfully",user})
 })
 
-app.patch("/",async(req,res)=>{
+app.patch("/",adminauthMiddleware,async(req,res)=>{
   const current=req.body.current
   console.log(current)
   if(current){
@@ -662,7 +667,7 @@ app.patch("/",async(req,res)=>{
     return res.send({message:"data not found"})
   } 
   // await data.save();
-  return res.send({message:"Profile Updated Successfully",data})
+  return res.send({message:"Movie Updated Successfully",data})
 }
 })
 
@@ -689,7 +694,7 @@ app.delete("/api/profile/:id",authMiddleware,async(req,res)=>{
   return res.send({message:"Profile Deleted Successfully"})
 })
 
-app.delete("/api/admin/movie/:id",authMiddleware,async(req,res)=>{
+app.delete("/api/admin/movie/:id",adminauthMiddleware,async(req,res)=>{
   const id=req.params.id
   console.log("....")
   const movie= await Movie.findByIdAndDelete(id)
@@ -697,7 +702,7 @@ app.delete("/api/admin/movie/:id",authMiddleware,async(req,res)=>{
   return res.send({message:"Deleted Successfully"})
 
 })
-app.delete("/api/admin/user/:id",authMiddleware,async(req,res)=>{
+app.delete("/api/admin/user/:id",adminauthMiddleware,async(req,res)=>{
   const id=req.params.id
   console.log("....")
   const user= await User.findByIdAndDelete(id)

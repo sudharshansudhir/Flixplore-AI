@@ -1,12 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react'
 // import {allmovies} from "../assets/data.json"
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 
 const Screen = () => {
   const {name}=useParams()
   const [founded,setfounded]=useState({})
+  const navigate=useNavigate()
+  const token=localStorage.getItem("token")
+  useEffect(()=>{if(!token){
+    navigate("/signin")
+  }},[])
   useEffect(()=>{
     async function fetchdata(){
       const data=await axios.get(`${API_BASE}/`)

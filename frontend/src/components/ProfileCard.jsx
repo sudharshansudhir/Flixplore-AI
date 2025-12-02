@@ -22,10 +22,9 @@ function validitydate(datenow){
   date.setMonth(date.getMonth() + 1);
   return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
 }
-
-  useEffect(()=>{
-    async function fetchUser(){
+async function fetchUser(){
       try{
+
         const user=await axios.get(`${API_BASE}/api/profile`,{
               headers:{
                 Authorization:localStorage.getItem("token")
@@ -35,7 +34,7 @@ function validitydate(datenow){
       }
       catch(e){
         if(e.response?.status==401){
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
       setuserdata([])
       // window.location.href = "/signin";
       navigate("/signin")
@@ -43,7 +42,16 @@ function validitydate(datenow){
     }
     
   }
+  useEffect(()=>{
+    const isAdmin=localStorage.getItem("isAdmin")
+    if(isAdmin=="true"){
+      navigate("/admin")
+    }
+    else{
   fetchUser()
+    }
+    
+  
   },[])
 
   async function deleteprofile(delId){

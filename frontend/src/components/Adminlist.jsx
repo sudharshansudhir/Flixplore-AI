@@ -5,19 +5,29 @@ import { useNavigate } from 'react-router-dom';
 
 const Adminlist = () => {
     const [users,setusers]=useState([])
+    const isAdmin=localStorage.getItem("isAdmin")
+    const token=localStorage.getItem("token")
     const [movies,setmovies]=useState([])
     const navigate=useNavigate()
     async function getData(){
-            const data=await axios.get(`${API_BASE}/api/admin/movies`,{
+            
+                const data=await axios.get(`${API_BASE}/api/admin/movies`,{
                 headers:{
                     Authorization:localStorage.getItem("token")
                 }
             })
             setmovies(data.data.movies)
             setusers(data.data.users)
+            
+            
         }
-    useEffect(()=>{        
-        getData()
+    useEffect(()=>{   
+        if(!(isAdmin=="true") || !token){
+            navigate("/")
+        }
+        else{     
+            getData()
+        }
     },[])
 
     async function deletemovie(id) {
@@ -49,6 +59,8 @@ const Adminlist = () => {
             console.log(e)
         }
     }
+
+    
 
     
 

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 const Editmovie = () => {
     const {id}=useParams()
     const [current,setcurrent]=useState(null)
     const [newdata,setnewdata] =useState({})
-    
+    const isAdmin=localStorage.getItem("isAdmin")
+    const token=localStorage.getItem("token")
+    const navigate=useNavigate() 
     const [isseries,setisseries]=useState(false)
     async function fetchAll(){
         const movies=await axios.get(`${API_BASE}/`)
@@ -19,7 +21,13 @@ const Editmovie = () => {
 
     }
     useEffect(()=>{
-        fetchAll()
+        if(!(isAdmin=="true") || !token){
+            navigate("/")
+        }
+        else{
+           fetchAll() 
+        }
+        
     },[])
 
     useEffect(() => {

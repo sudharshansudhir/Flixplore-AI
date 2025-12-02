@@ -23,9 +23,10 @@ const Logincard = () => {
             // console.log(response.data)
             // console.log(response.data)
             // console.log(response.data.token)
-            localStorage.setItem("token",response.data)
+            localStorage.setItem("token",response.data.token)
             alert("ADMIN LOGIN SUCCESSFUL")
             setlogin(true)
+            localStorage.setItem("isAdmin","true")
             // console.log("response is :",response)
             navigate("/admin")
             }

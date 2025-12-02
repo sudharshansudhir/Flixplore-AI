@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Wishlist from './pages/Wishlist'
 import Profile from './pages/Profile'
@@ -12,12 +12,17 @@ import Register from './pages/Register'
 import Bot from './components/Bot'
 import Admin from './pages/Admin'
 import AdminEdit from './pages/AdminEdit'
+import Adminnavbar from './components/Adminnavbar'
 
 const App = () => {
+  const location=useLocation()
+
+  const isadmin=location.pathname.startsWith("/admin")
 
   return (
     <div>
-      <Navbar/>
+      {!isadmin &&  <Navbar/>}
+      {isadmin && <Adminnavbar/>}
       <Routes>
         <Route path='/' Component={Home}/>
         <Route path='/wishlist' Component={Wishlist}/>
@@ -31,7 +36,7 @@ const App = () => {
         <Route path='/search' Component={Search}/>
         <Route path="/admin" Component={Admin}/>
       </Routes>
-      <Bot/>
+      {!isadmin && <Bot/>}
     </div>
   )
 }

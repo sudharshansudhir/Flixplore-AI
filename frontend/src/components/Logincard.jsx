@@ -3,6 +3,8 @@ import logo from "../assets/logo.png"
 import { AppContext } from '../context/Context'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+const adminid=import.meta.env.VITE_admin_name
+const adminpassword=import.meta.env.VITE_admin_password
 // #2626266b
 const API_BASE = import.meta.env.VITE_URI;
 const Logincard = () => {
@@ -16,7 +18,7 @@ const Logincard = () => {
             alert("The field Should not be empty")
         }
         else{
-            if(username=="admin@flixplore" && password=="admin1234"){
+            if(username==adminid && password==adminpassword){
                try{
             const response=await axios.post(`${API_BASE}/api/admin/login`,{adminID:username,password})
             // console.log(response)

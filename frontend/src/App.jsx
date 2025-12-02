@@ -13,6 +13,7 @@ import Bot from './components/Bot'
 import Admin from './pages/Admin'
 import AdminEdit from './pages/AdminEdit'
 import Adminnavbar from './components/Adminnavbar'
+import Addmovie from './components/Addmovie'
 
 const App = () => {
   const location=useLocation()
@@ -25,16 +26,17 @@ const App = () => {
       {isadmin && <Adminnavbar/>}
       <Routes>
         <Route path='/' Component={Home}/>
-        <Route path='/wishlist' Component={Wishlist}/>
-        <Route path='/profile' Component={Profile}/>
-        <Route path='/movies' Component={Movies}/>
-        <Route path='/watch/:name' Component={Watch}/>
-        <Route path='/admin/edit/:id' Component={AdminEdit}/>
-        <Route path='/series' Component={Series}/>
         <Route path='/signup' Component={Register}/>
         <Route path='/signin' Component={Login}/>
+        <Route path='/profile' Component={Profile}/>
+        <Route path='/movies' Component={Movies}/>
+        <Route path='/series' Component={Series}/>
         <Route path='/search' Component={Search}/>
+        <Route path='/wishlist' Component={Wishlist}/>
+        <Route path='/watch/:name' Component={Watch}/>
         <Route path="/admin" Component={Admin}/>
+        <Route path="/admin/add" Component={Addmovie}/>
+        <Route path='/admin/edit/:id' Component={AdminEdit}/>
       </Routes>
       {!isadmin && <Bot/>}
     </div>

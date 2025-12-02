@@ -3,6 +3,7 @@ const cors = require("cors");
 const bcrypt=require("bcrypt")
 const jwt=require("jsonwebtoken")
 require("dotenv").config();
+const multer=require("multer")
 
 
 const mongoose=require('mongoose');
@@ -15,6 +16,19 @@ const mongoose=require('mongoose');
     .catch((err)=>{
         console.log("Error Occured",err)
     })
+
+  const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+      cb(null,"uploads/")
+    },
+    filename:(req,file,cb)=>{
+      const uniquename=Date.now()+"-"+file.originalname;
+      cb(null,uniquename)
+
+    }
+  })
+
+  const upload=multer({storage})
 
 const userSchema=new mongoose.Schema({
     username:{type:String},
@@ -35,10 +49,9 @@ const movieSchema=new mongoose.Schema({
     name: {type:String,unique:true},
     year:{type:Number},
     genre:[{type:String}],
-    ratings:{type:Number,min:0,max:10},
     runtime:{type:String},
     thumbnail:{type:String},
-    age_restriction:{type:String},
+    videosrc:{type:String},
     story_line:{type:String},
     cast:[{type:String}],
     crew:[{type:String}],
@@ -147,7 +160,7 @@ const authMiddleware=(req,res,next)=>{
     const token=req.header("Authorization")?.replace("Bearer ", "");
     if(!token) return res.status(401).json({message:"No token."})
     try{
-        const decoded=jwt.verify(token,"QWERTYistheSecretKey")
+        const decoded=jwt.verify(token,process.env.userkey)
         req.logger=decoded
         next();
 }
@@ -159,7 +172,7 @@ const adminauthMiddleware=(req,res,next)=>{
     const token=req.header("Authorization")?.replace("Bearer ", "");
     if(!token) return res.status(401).json({message:"No token."})
     try{
-        const decoded1=jwt.verify(token,"adminkey")
+        const decoded1=jwt.verify(token,process.env.adminkey)
         // console.log("...",decoded1)
         if(!decoded1.isAdmin){
           return res.status(401).json({message:"You are not Admin"})
@@ -312,7 +325,7 @@ app.post("/api/register",async(req,res)=>{
     const newUser=new User({username,email,password:hashedpassword})
     await newUser.save()
     const user=await User.findOne({email})
-    const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
+    const token=jwt.sign({id:user._id},process.env.userkey)
     res.json({message:"Login Success",token})
     res.json({message:"New User Registered successfully"})
 })
@@ -325,7 +338,7 @@ app.post("/api/login",async(req,res)=>{
     if(!check){
         return res.status(401).json({message:"Wrong Password"})
     }
-    const token=jwt.sign({id:user._id},"QWERTYistheSecretKey")
+    const token=jwt.sign({id:user._id},process.env.userkey)
     res.json({message:"Login Success",token})
 })
 
@@ -340,7 +353,7 @@ app.post("/api/admin/login",async(req,res)=>{
 
   if(id==defaultadmin.adminID && password==defaultadmin.adminPassword){
     console.log("You are ADMIN")
-    const token=jwt.sign({isAdmin:true,id:defaultadmin.adminID},"adminkey")
+    const token=jwt.sign({isAdmin:true,id:defaultadmin.adminID},process.env.adminkey)
     // const isAdmin=jwt.sign({isAdmin:true},"admintrue")
    return res.send({token})
   }
@@ -357,6 +370,32 @@ app.post("/api/wishlist",authMiddleware,async(req,res)=>{
     await user.save()
     console.log("ADDED: ",user.wishlist)
     res.json("Successfully added",user.wishlist)
+})
+
+app.use("/uploads",express.static("uploads"))
+
+app.post("/api/admin/add",adminauthMiddleware,upload.fields([{name:"thumbnail",maxCount:1},{name:"videosrc",maxCount:1}]),async(req,res)=>{
+  // const {current}=req.body;
+  // console.log(current)
+  const data=new Movie({
+
+        name:req.body.name,
+        year:req.body.year,
+        genre:req.body.genre,
+        runtime:req.body.runtime,
+        story_line:req.body.story_line,
+        cast:req.body.cast,
+        crew:req.body.crew,
+        episodes_count:req.body.episodes_count,
+        languages_available:req.body.languages_available,
+        seasons_count:req.body.seasons_count,
+    thumbnail:req.files.thumbnail? req.files.thumbnail[0].filename:null,
+    videosrc:req.files.videosrc? req.files.videosrc[0].filename:null
+
+  })
+  await data.save()
+  console.log(data)
+  return res.send({message:"Uploaded Successfully"})
 })
 
 app.post("/api/smartbot", async (req, res) => {

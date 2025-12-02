@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 const API_BASE = import.meta.env.VITE_URI;
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Adminlist = () => {
     const [users,setusers]=useState([])
@@ -61,24 +61,19 @@ const Adminlist = () => {
     }
 
     
-
-    
-
-
-
-
   return (
-    <div className='pt-8'>
-    <div className='text-3xl'>Welcome Admin,</div>
-    <div className='flex mt-16 justify-center items-center'>
-    <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#350707ff] py-4 px-2'>Movies List</div></div>
+    <div className='mt-24'>
+    <div className='text-3xl font-bold'>Welcome Admin,</div>
+    <div className='flex mt-6 justify-center items-center'>
+    <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#313131ff] py-4 px-2'>Movies List</div></div>
+    <div className='flex justify-end my-6 w-[80%]'><NavLink to="/admin/add" className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000] text-xl">Add New Movie</NavLink></div>
     <div className='flex flex-wrap mt-4 justify-center gap-6 px-6'>
         {movies&&movies.map((item,index)=>
         <div key={index} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
             <img src={item.thumbnail} alt={item.name} width={300} className="h-[350px]  rounded-md" />
             <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="text-2xl text-white">{item.name}</div>
-                <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
+                <div className="text-[16px] text-white">Film Released on {item.year}</div>
             
                 <div className="p-4 w-full">
                     <button className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full" onClick={()=>navigate(`/admin/edit/${item._id}`)} >
@@ -96,10 +91,10 @@ const Adminlist = () => {
        
     </div>
         <div className='flex mt-16 mb-8 justify-center items-center'>
-    <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#350707ff] py-4 px-2'>Users List</div></div>
+    <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#313131ff] py-4 px-2'>Users List</div></div>
     <div className='flex flex-col justify-center rounded-md   items-center'>
         {users&&users.map((item,index)=>{
-            return <div className={`flex items-center ${index%2==0 ? "bg-[#aa0000ff] " : "bg-[#ff6a6aff]"} w-[80%] rounded-md px-2 py-4 justify-between`}>
+            return <div className={`flex items-center ${index%2==0 ? "bg-[#aa0000ff] " : "bg-[#ff6a6aff]"} w-[80%] rounded-md px-2 my-2 py-4 justify-between`}>
                 <div className='text-xl'>
                     {item.username}
                 </div>

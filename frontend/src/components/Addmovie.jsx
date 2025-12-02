@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from 'react'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+const API_BASE = import.meta.env.VITE_URI;
+import placeholder from "../assets/movieplaceholder.png"
+const Addmovie = () => {
+    const [current,setcurrent]=useState(
+        {
+            
+                "name":"",
+                "year":"",
+                "genre":"",
+                "ratings":"",
+                "runtime":"",
+                "thumbnail":"",
+                "videosrc":"",
+                "story_line":"",
+                "cast":"",
+                "crew":"",
+                "episodes_count":"",
+                "seasons_count":"",
+                "languages_available":"",
+            
+        }
+    )
+    const isAdmin=localStorage.getItem("isAdmin")
+    const token=localStorage.getItem("token")
+    const navigate=useNavigate() 
+    const [isseries,setisseries]=useState(false)
+    
+    useEffect(()=>{
+        if(!(isAdmin=="true") || !token){
+            navigate("/")
+        }        
+    },[])
+
+    async function newmovie(){
+        const formdata=new FormData()
+        Object.keys(current).forEach((key)=>{
+            formdata.append(key,current[key])
+        })
+        
+        try{
+            const newadded=await axios.post(`${API_BASE}/api/admin/add`,formdata,{
+                headers:{
+                    Authorization:localStorage.getItem("token")
+                }
+            })
+            console.log(newadded)
+            alert("Added Successfully")
+            navigate("/admin")
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+  return (
+
+    <div className='flex justify-center w-full items-center'>
+        <div className="py-20 w-full flex justify-center">
+            <form className="md:p-10 p-4 space-y-5 w-full">
+                <div>
+                    <p className="text-base font-medium">Movie Thumbnail</p>
+                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                        
+                            <label key={1} htmlFor={`image${1}`}>
+                                <input accept="image/*" type="file" id={`image${1}`} hidden onChange={(e)=>setcurrent({...current,thumbnail:e.target.files[0]})}/>
+                                <img className="cursor-pointer border" src={placeholder} alt="uploadArea" width={400} height={400} />
+                            </label>
+                        
+                    </div>
+                </div>
+                <div>
+                    <p className="text-base font-medium">Movie Video</p>
+                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                        
+                            <label key={1} htmlFor={`video${1}`}>
+                                <input accept="video/*" type="file" id={`video${1}`} hidden onChange={(e)=>setcurrent({...current,videosrc:e.target.files[0]})}/>
+                                <img className="cursor-pointer border" src={placeholder} alt="uploadArea" width={400} height={200} />
+                            </label>
+                        
+                    </div>
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-name">Movie Name</label>
+                    <input id="product-name"  onChange={(e)=>setcurrent({...current,name:e.target.value})} type="text"  placeholder="eg.Amaran" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-year">Year</label>
+                    <input id="product-year"  onChange={(e)=>setcurrent({...current,year:e.target.value})} type="text"  placeholder="eg.2024" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-genre">Genre</label>
+                    <input id="product-genre" onChange={(e)=>setcurrent({...current,genre:e.target.value.split(",")})} type="text" placeholder="eg.Action,Romantic,Emotional" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-description">Story Line</label>
+                    <textarea id="product-description"  onChange={(e)=>setcurrent({...current,story_line:e.target.value})} rows={4} className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900 resize-none"  placeholder="eg.The Story based on Indian Army Major Mukund Varadarajan life."></textarea>
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-runtime">Runtime</label>
+                    <input id="product-runtime"  onChange={(e)=>setcurrent({...current,runtime:e.target.value})} type="text"  placeholder="eg.148min" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-cast">Cast</label>
+                    <input id="product-cast" type="text"  onChange={(e)=>setcurrent({...current,cast:e.target.value.split(",")})} placeholder="eg.Sivakarthikeyan,Saipallavi" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-crew">Crew</label>
+                    <input id="product-crew" type="text"  onChange={(e)=>setcurrent({...current,crew:e.target.value.split(",")})} placeholder="eg.Rajkumar Periyasamy,Kamal Haasan,Gv Prakash Kumar" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-language">Languages</label>
+                    <input id="product-language" type="text"  onChange={(e)=>setcurrent({...current,languages_available:e.target.value.split(",")})} placeholder="eg.Tamil,Telugu,Malayalam,Hindi,Kannada" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+
+                <div className='flex items-center gap-4'>
+                    <span className="text-base font-medium">Movies</span>
+                    <label className="relative inline-flex items-center cursor-pointer gap-3">
+                        <input type="checkbox" checked={isseries} onChange={()=>setisseries(!isseries)} className="sr-only peer" />
+                        
+                        <div className="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-red-600 transition-colors duration-200"></div>
+                        <span className="dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
+             
+                    </label>
+                    <span className="text-base font-medium">Series</span>
+                </div>
+                {isseries&&<>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-sno">Season No</label>
+                    <input id="product-sno" type="text"  onChange={(e)=>setcurrent({...current,seasons_count:e.target.value})} placeholder="eg.Season 3" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                <div className="flex flex-col gap-1 max-w-md">
+                    <label className="text-base font-medium" htmlFor="product-eno">Episode No</label>
+                    <input id="product-eno" type="text" placeholder="eg.Episode 7" onChange={(e)=>setcurrent({...current,episodes_count:e.target.value})} className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
+                </div>
+                </>
+                }
+                
+                
+                <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium mx-4 hover:bg-red-700 rounded" onClick={()=>newmovie()}>Save</NavLink>
+                <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium hover:bg-red-700 rounded">Cancel</NavLink>
+            </form>
+        </div>
+        
+    </div>
+  )
+}
+
+export default Addmovie
+
+
+// #2a2a2aff

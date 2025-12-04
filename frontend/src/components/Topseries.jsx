@@ -9,7 +9,7 @@ const API_BASE = import.meta.env.VITE_URI;
 const Topseries = () => {
   const [Movies,setMovies]=useState()
   const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
-
+const [showOverlay, setShowOverlay] = useState(false);
   // const [aboutindex,setaboutindex]=useState(null)
 
   const navigate=useNavigate()
@@ -90,10 +90,11 @@ async function addlist(item){
         <ChevronLeft size={28} />
       </button>
       {Movies && Movies.map((item,index)=>{
-          return  <div key={index} className="relative w-[200px] h-[230px] shrink-0 hover:scale-105 group">
+         const isOpen = showOverlay === index;
+          return  <div onClick={() => setShowOverlay(isOpen ? null : index)} key={index} className="relative w-[200px] h-[230px] shrink-0 hover:scale-105 group">
   <img src={item.thumbnail} alt={item.name} width={200} className="h-[220px]  rounded-md" />
 
-  <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+  <div className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}>
     <div className="text-2xl text-white">{item.name}</div>
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 

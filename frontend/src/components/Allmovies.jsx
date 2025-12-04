@@ -10,7 +10,7 @@ const Allmovies = () => {
   // store full list
   const [Movies,setMovies] = useState();
     const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
-  
+  const [showOverlay, setShowOverlay] = useState(false);
   // store filtered list (what user sees)
    var [Filtered, setFiltered] = useState();
    if(Filtered){
@@ -147,8 +147,10 @@ const Allmovies = () => {
 
       <div className="flex flex-wrap mt-4 justify-center gap-6 px-6">
         {(Filtered&& Filtered.length )> 0 ? (
-          Filtered.map((item, index) => (
-            <div key={index} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+          Filtered.map((item, index) => {
+             const isOpen = showOverlay === index;
+            
+            <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)}  className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
   <img  src={
     typeof item.thumbnail === "string"
       ? (item.thumbnail.startsWith("http")
@@ -157,7 +159,7 @@ const Allmovies = () => {
         )
       : URL.createObjectURL(current.thumbnail) // if File object
   } alt={item.name} width={300} className="h-[350px]  rounded-md" />
-              <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}>
     <div className="text-2xl text-white">{item.name}</div>
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 
@@ -181,7 +183,7 @@ const Allmovies = () => {
     </div>
   </div>
             </div>
-          ))
+})
         ) : (
           <p className="text-white text-lg mt-20">No movies found 😢</p>
         )}

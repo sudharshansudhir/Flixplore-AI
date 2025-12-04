@@ -10,7 +10,7 @@ const API_BASE = import.meta.env.VITE_URI;
 const Emotional = () => {
   const [Movies,setMovies]=useState()
   const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
-
+const [showOverlay, setShowOverlay] = useState(false);
 
   const navigate=useNavigate()
 
@@ -89,37 +89,74 @@ async function addlist(item){
           >
             <ChevronLeft size={28} />
           </button>
-      {Movies && Movies.map((item,index)=>{
-          return  <div key={index} className="relative w-[200px] h-[230px] shrink-0 hover:scale-105 group">
-  <img src={item.thumbnail} alt={item.name} width={200} className="h-[220px]  rounded-md" />
+      {Movies && Movies.map((item, index) => {
+  const isOpen = showOverlay === index;
 
-  <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-    <div className="text-2xl text-white">{item.name}</div>
-    <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
+  return (
+    <div 
+      key={index} 
+      className="relative w-[200px] h-[230px] shrink-0 hover:scale-105 group"
+      onClick={() => setShowOverlay(isOpen ? null : index)} // toggle ONLY this card
+    >
+      <img
+        src={item.thumbnail}
+        alt={item.name}
+        width={200}
+        className="h-[220px] rounded-md"
+      />
 
-    <div className="p-4 w-full">
-          {login?<div>
-                  {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-                    Go to Wishlist
-                  </button>
-                ) : (<button  onClick={() => {addlist(item.name)}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
-                    Add to Wishlist
-                  </button>
-                )}
-                
-          
-                <NavLink to={`/watch/${item.name}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-                        Watch Now
-                      </NavLink></div>:<div>
-                        <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
-                        Login to Watch
-                      </NavLink></div>}
+      {/* overlay */}
+      <div
+        className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}
+      >
+        <div className="text-2xl text-white">{item.name}</div>
+        <div className="text-[16px] text-white">
+          {item.ratings} Ratings from IMDB
         </div>
-  </div>
-</div>
 
-            })
-      }
+        <div className="p-4 w-full">
+          {login ? (
+            <div>
+              {userlist.includes(item.name) ? (
+                <button
+                  onClick={() => navigate("/wishlist")}
+                  className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full"
+                >
+                  Go to Wishlist
+                </button>
+              ) : (
+                <button
+                  onClick={() => addlist(item.name)}
+                  className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full"
+                >
+                  Add to Wishlist
+                </button>
+              )}
+
+              <NavLink
+                to={`/watch/${item.name}`}
+                onClick={() => setcurrfilm(item.name)}
+                className="border block w-full cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1 text-white"
+              >
+                Watch Now
+              </NavLink>
+            </div>
+          ) : (
+            <div>
+              <NavLink
+                to="/signin"
+                className="border block w-full cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1 text-white"
+              >
+                Login to Watch
+              </NavLink>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+})}
+
         <button onClick={handleNext} className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 backdrop-blur-md"
       >
         <ChevronRight size={28} />

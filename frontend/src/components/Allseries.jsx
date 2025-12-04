@@ -9,6 +9,7 @@ const API_BASE = import.meta.env.VITE_URI;
 const Allseries = () => {
   const [Movies,setMovies] = useState();
   var [Filtered, setFiltered] = useState();
+  const [showOverlay, setShowOverlay] = useState(false);
       const {login,setcurrfilm,userlist,setuserlist} = useContext(AppContext)
       if(Filtered){        
   Filtered=Filtered.filter((item)=>(item.episodes_count))
@@ -140,10 +141,11 @@ const handleSearchChange = (e) => {
 
       <div className="flex flex-wrap mt-4 justify-center gap-6 px-6">
         {Filtered&&Filtered.length > 0 ? (
-          Filtered.map((item, index) => (
-            <div key={index} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+          Filtered.map((item, index) => {
+             const isOpen = showOverlay === index;
+            <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
   <img src={item.thumbnail} alt={item.name} width={300} className="h-[350px]  rounded-md" />
-              <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}>
     <div className="text-2xl text-white">{item.name}</div>
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>
 
@@ -167,7 +169,7 @@ const handleSearchChange = (e) => {
         </div>
   </div>
             </div>
-          ))
+})
         ) : (
           <p className="text-white text-lg mt-20">No series found 😢</p>
         )}

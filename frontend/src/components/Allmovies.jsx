@@ -56,10 +56,13 @@ const Allmovies = () => {
   const navigate=useNavigate()
 
   useEffect(()=>{
-    fetch(`${API_BASE}/`)
-    .then((values)=>values.json())
-    .then((value)=>{setMovies(value);setFiltered(value)})
-    .catch((e)=>console.log("Error occured during fetching action movies"))
+    async function fetchmovies() {
+        const data=await axios.get(`${API_BASE}`)
+        // console.log(data)
+        setMovies(data.data)
+        setFiltered(data.data)
+    }
+  fetchmovies()
 
     async function fetchwishlist(){
       try{

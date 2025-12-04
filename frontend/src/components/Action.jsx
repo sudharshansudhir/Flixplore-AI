@@ -30,10 +30,13 @@ const Action = () => {
 // console.log(list)
 
 useEffect(()=>{
-  fetch(`${API_BASE}/api/action`)
-  .then((values)=>values.json())
-  .then((value)=>setMovies(value))
-  .catch((e)=>console.log("Error occured during fetching action movies"))
+
+  async function fetchmovies(){
+    const data=await axios.get(`${API_BASE}`)
+    const fetched=data.data.filter((item)=>item.genre.includes("Action"))
+    setMovies(fetched)
+  }
+  fetchmovies()
  async function fetchwishlist(){
       try{
         const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{

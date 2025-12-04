@@ -29,10 +29,14 @@ const Topmovies = () => {
   };
 // console.log(list)
 useEffect(()=>{
-  fetch(`${API_BASE}/api/allmovies`)
-  .then((values)=>values.json())
-  .then((value)=>setMovies(value))
-  .catch((e)=>console.log("Error occured during fetching action movies"))
+  
+    async function fetchmovies(){
+    const data=await axios.get(`${API_BASE}`)
+    const fetched=data.data.filter((item)=>{return !item.seasons_count})
+    setMovies(fetched)
+  }
+  fetchmovies()
+
  async function fetchwishlist(){
       try{
         const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{

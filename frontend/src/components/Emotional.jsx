@@ -28,10 +28,12 @@ const Emotional = () => {
   };
 // console.log(list)
 useEffect(()=>{
-  fetch(`${API_BASE}/api/emotional`)
-  .then((values)=>values.json())
-  .then((value)=>setMovies(value))
-  .catch((e)=>console.log("Error occured during fetching action movies"))
+ async function fetchmovies(){
+    const data=await axios.get(`${API_BASE}`)
+    const fetched=data.data.filter((item)=>item.genre.includes("Thriller"))
+    setMovies(fetched)
+  }
+  fetchmovies()
  async function fetchwishlist(){
       try{
         const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
@@ -81,7 +83,7 @@ async function addlist(item){
 
   return (
     <div className='relative my-8 mx-4'>
-      <div className='text-2xl my-4'>Emotional Picks</div>
+      <div className='text-2xl my-4'>Crime Thrillers</div>
       <div style={{scrollbarWidth: "none", msOverflowStyle: "none",}} ref={scrollRef} className="flex space-x-4 overflow-x-auto scrollbar-hide scroll-smooth">
     <button onClick={handlePrev} className="absolute left-4 z-30  top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 backdrop-blur-md"
           >

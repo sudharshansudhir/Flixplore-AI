@@ -51,8 +51,8 @@ const handleSearchChange = (e) => {
   useEffect(()=>{
         async function fetchmovies() {
         const data=await axios.get(`${API_BASE}`)
-        setMovies(data)
-        setFiltered(data)
+        setMovies(data.data)
+        setFiltered(data.data)
     }
   fetchmovies()
 

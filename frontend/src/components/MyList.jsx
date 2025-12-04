@@ -59,7 +59,14 @@ async function removefromlist(id){
     <div className='pt-24 flex justify-start items-center gap-2 flex-wrap'>
         {(Movies&&Movies.length>0) ? Movies.map((item,index)=>{
            return <div key={index} className='w-[200px] h-[250px] rounded-md m-2 border border-[#ff0000ff]'>
-                <img src={item.thumbnail} alt={item.name} className='w-full h-[70%]'/>
+                <img src={
+    typeof item.thumbnail === "string"
+      ? (item.thumbnail.startsWith("http")
+          ? item.thumbnail
+          : `${API_BASE}/uploads/${item.thumbnail}`
+        )
+      : URL.createObjectURL(current.thumbnail) // if File object
+  } alt={item.name} className='w-full h-[70%]'/>
                 <NavLink onClick={()=>setcurrfilm(item.name)}  to={`/watch/${item.name}`} className='block w-full text-center px-3 py-1 hover:border-1 hover:border-black hover:bg-[#b20f0fff] bg-[#ff0000ff] h-[15%]'>Watch Now</NavLink>
                 <button onClick={()=>removefromlist(item.name)} className='block w-full hover:border-black hover:bg-[#272626ff] text-center px-3 py-1 bg-[#0e0e0eff] border-1 border-[#ff0000ff] rounded-md h-[15%]'>Remove from wishlist</button>
                 

@@ -55,8 +55,8 @@ const movieSchema=new mongoose.Schema({
     story_line:{type:String},
     cast:[{type:String}],
     crew:[{type:String}],
-    episodes_count:{type:Number},
-    seasons_count:{type:Number},
+    episodes_count:{type:String},
+    seasons_count:{type:String},
     languages_available:[{type:String}],
 })
 const actionSchema=new mongoose.Schema({
@@ -695,9 +695,18 @@ app.patch("/api/profile",authMiddleware,async(req,res)=>{
   return res.send({message:"Profile Updated Successfully",user})
 })
 
-app.patch("/",adminauthMiddleware,async(req,res)=>{
-  const current=req.body.current
-  console.log(current)
+app.patch("/",adminauthMiddleware,upload.fields([{name:"thumbnail",maxCount:1},{name:"videosrc",maxCount:1}]),async(req,res)=>{
+  const current=req.body
+  // console.log("...",current)
+   if (req.files.thumbnail) {
+        current.thumbnail = req.files.thumbnail[0].filename;
+      }
+
+      // If new video uploaded
+      if (req.files.videosrc) {
+        current.videosrc = req.files.videosrc[0].filename;
+      }
+  // console.log(current)
   if(current){
     const data=await Movie.findByIdAndUpdate(current._id,{$set:current},{new:true})
   if(!data){ 

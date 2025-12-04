@@ -146,7 +146,14 @@ const Allmovies = () => {
         {(Filtered&& Filtered.length )> 0 ? (
           Filtered.map((item, index) => (
             <div key={index} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
-  <img src={item.thumbnail} alt={item.name} width={300} className="h-[350px]  rounded-md" />
+  <img  src={
+    typeof item.thumbnail === "string"
+      ? (item.thumbnail.startsWith("http")
+          ? item.thumbnail
+          : `${API_BASE}/uploads/${item.thumbnail}`
+        )
+      : URL.createObjectURL(current.thumbnail) // if File object
+  } alt={item.name} width={300} className="h-[350px]  rounded-md" />
               <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
     <div className="text-2xl text-white">{item.name}</div>
     <div className="text-[16px] text-white">{item.ratings} Ratings from IMDB</div>

@@ -22,10 +22,53 @@ const Screen = () => {
     fetchdata()
   },[name])
   return (
-   <div>{
-      founded ? <img src={founded.thumbnail} alt={founded.name} className='w-full h-[90vh] '/>:<div className='w-full h-[80vh] flex justify-center items-center text-3xl'>No Results found</div>
-    }
-    </div> 
+   <div>
+  {founded ? (
+    founded.videosrc ? (
+      // 🎥 Show VIDEO if available
+      <video
+        className="w-full h-[90vh]"
+        autoPlay
+        muted
+        loop
+        controls
+      >
+        <source
+          src={
+            typeof founded.videosrc === "string"
+              ? (founded.videosrc.startsWith("http")
+                  ? founded.videosrc
+                  : `${API_BASE}/uploads/${founded.videosrc}`
+                )
+              : founded.videosrc instanceof File
+                ? URL.createObjectURL(founded.videosrc)
+                : null
+          }
+        />
+      </video>
+    ) : (
+      // 🖼️ Show IMAGE if no video
+      <img
+        src={
+          typeof founded.thumbnail === "string"
+            ? (founded.thumbnail.startsWith("http")
+                ? founded.thumbnail
+                : `${API_BASE}/uploads/${founded.thumbnail}`
+              )
+            : null
+        }
+        alt={founded.name}
+        className="w-full h-[90vh]"
+      />
+    )
+  ) : (
+    // ❌ No results
+    <div className="w-full h-[80vh] flex justify-center items-center text-3xl">
+      No Results found
+    </div>
+  )}
+</div>
+ 
 
      
     // </div>

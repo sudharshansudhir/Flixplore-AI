@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 import placeholder from "../assets/movieplaceholder.png"
 const Addmovie = () => {
+    const ref=useRef()
     const [current,setcurrent]=useState(
         {
             
@@ -43,7 +44,8 @@ const Addmovie = () => {
         try{
             const newadded=await axios.post(`${API_BASE}/api/admin/add`,formdata,{
                 headers:{
-                    Authorization:localStorage.getItem("token")
+                    Authorization:localStorage.getItem("token"),
+                    "Content-Type": "multipart/form-data",
                 }
             })
             console.log(newadded)
@@ -65,7 +67,7 @@ const Addmovie = () => {
                         
                             <label key={1} htmlFor={`image${1}`}>
                                 <input accept="image/*" type="file" id={`image${1}`} hidden onChange={(e)=>setcurrent({...current,thumbnail:e.target.files[0]})}/>
-                                <img className="cursor-pointer border" src={placeholder} alt="uploadArea" width={400} height={400} />
+                                <img className="cursor-pointer border" src={current.thumbnail ? URL.createObjectURL(current.thumbnail) : placeholder} alt="uploadArea" width={400} height={400} />
                             </label>
                         
                     </div>
@@ -74,10 +76,39 @@ const Addmovie = () => {
                     <p className="text-base font-medium">Movie Video</p>
                     <div className="flex flex-wrap items-center gap-3 mt-2">
                         
-                            <label key={1} htmlFor={`video${1}`}>
-                                <input accept="video/*" type="file" id={`video${1}`} hidden onChange={(e)=>setcurrent({...current,videosrc:e.target.files[0]})}/>
-                                <img className="cursor-pointer border" src={placeholder} alt="uploadArea" width={400} height={200} />
-                            </label>
+                            <label htmlFor="videoUpload" className="relative inline-block">
+  <input
+    accept="video/*"
+    type="file"
+    id="videoUpload"
+    hidden
+    onChange={(e) => setcurrent({ ...current, videosrc: e.target.files[0] })}
+  />
+
+  {/* Video Preview */}
+  {current.videosrc ? (
+    <div className="relative">
+      <video ref={ref} width={400} height={200} controls className="border" >
+        <source
+          src={
+            typeof current.videosrc === "string"
+              ? `${API_BASE}/uploads/${current.videosrc}`
+              : URL.createObjectURL(current.videosrc)
+          }
+        />
+      </video>
+
+      {/* Transparent overlay click area */}
+      <button
+        type="button"
+        className="absolute inset-0 bg-transparent"
+        onClick={() => document.getElementById("videoUpload").click()}
+      ></button>
+    </div>
+  ) : (
+    <img src={placeholder} width={400} height={200} className="border cursor-pointer" />
+  )}
+</label>
                         
                     </div>
                 </div>
@@ -139,7 +170,7 @@ const Addmovie = () => {
                 
                 
                 <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium mx-4 hover:bg-red-700 rounded" onClick={()=>newmovie()}>Save</NavLink>
-                <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium hover:bg-red-700 rounded">Cancel</NavLink>
+                <NavLink to="/admin" className="px-8 py-2.5 bg-red-500 text-white font-medium hover:bg-red-700 rounded" onClick={()=>{setprev()}}>Cancel</NavLink>
             </form>
         </div>
         

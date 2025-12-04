@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 const Editmovie = () => {
     const {id}=useParams()
+    const ref=useRef()
     const [current,setcurrent]=useState(null)
     const [newdata,setnewdata] =useState({})
     const isAdmin=localStorage.getItem("isAdmin")
@@ -39,16 +40,33 @@ const Editmovie = () => {
 }, [newdata]);
 
 async function handlesave() {
-    const data= await axios.patch(`${API_BASE}/`,{current})
+    const formdata=new FormData()
+        Object.keys(current).forEach((key)=>{
+            formdata.append(key,current[key])
+        })
+    try{
+    const data= await axios.patch(`${API_BASE}/`,formdata,{
+        headers:{
+            Authorization:localStorage.getItem("token"),
+                    "Content-Type": "multipart/form-data",
+        }
+    })
+    console.log(data)
     if(data){
         alert("Saved Successfully")
         fetchAll()
     }
+    }
+    catch(e){
+        console.log(data)
+        console.log("....",e)
+    }
+    
 }
 
 function setprev(){
     setcurrent(newdata)
-    
+    navigate("/admin")    
 }
 
   return (
@@ -62,12 +80,67 @@ function setprev(){
                     <div className="flex flex-wrap items-center gap-3 mt-2">
                         
                             <label key={1} htmlFor={`image${1}`}>
-                                <input accept="image/*" type="file" id={`image${1}`} hidden />
-                                <img className="cursor-pointer" src={current.thumbnail} onChange={(e)=>setcurrent({...current,thumbnail:e.target.value})} alt="uploadArea" width={400} height={400} />
+                                <input accept="image/*" type="file" id={`image${1}`} onChange={(e)=>setcurrent({...current,thumbnail:e.target.files[0]})} hidden />
+<img
+  className="cursor-pointer"
+  src={
+    typeof current.thumbnail === "string"
+      ? (current.thumbnail.startsWith("http")
+          ? current.thumbnail
+          : `${API_BASE}/uploads/${current.thumbnail}`
+        )
+      : URL.createObjectURL(current.thumbnail) // if File object
+  }
+  alt="uploadArea"
+  width={400}
+  height={400}
+/>
                             </label>
+
                         
                     </div>
                 </div>
+
+                <div>
+                                    <p className="text-base font-medium">Movie Video</p>
+                                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                                        
+                                            <label htmlFor="videoUpload" className="relative inline-block">
+  <input
+    accept="video/*"
+    type="file"
+    id="videoUpload"
+    hidden
+    onChange={(e) => setcurrent({ ...current, videosrc: e.target.files[0] })}
+  />
+
+  {/* Video Preview */}
+  {current.videosrc ? (
+    <div className="relative">
+      <video ref={ref} width={400} height={200} controls className="border" >
+        <source
+          src={
+            typeof current.videosrc === "string"
+              ? `${API_BASE}/uploads/${current.videosrc}`
+              : URL.createObjectURL(current.videosrc)
+          }
+        />
+      </video>
+
+      {/* Transparent overlay click area */}
+      <button
+        type="button"
+        className="absolute inset-0 bg-transparent"
+        onClick={() => document.getElementById("videoUpload").click()}
+      ></button>
+    </div>
+  ) : (
+    <img src={placeholder} width={400} height={200} className="border cursor-pointer" />
+  )}
+</label>
+                                        
+                                    </div>
+                                </div>
                 <div className="flex flex-col gap-1 max-w-md">
                     <label className="text-base font-medium" htmlFor="product-name">Movie Name</label>
                     <input id="product-name" value={current.name} onChange={(e)=>setcurrent({...current,name:e.target.value})} type="text"  placeholder="eg.Amaran" className="outline-none md:py-2.5 py-2 px-3 rounded border border-red-900" required />
@@ -126,7 +199,7 @@ function setprev(){
                 
                 
                 <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium mx-4 hover:bg-red-700 rounded" onClick={()=>{handlesave()}}>Save</NavLink>
-                <NavLink className="px-8 py-2.5 bg-red-500 text-white font-medium hover:bg-red-700 rounded" onClick={()=>{setprev()}}>Cancel</NavLink>
+                <NavLink to="/admin" className="px-8 py-2.5 bg-red-500 text-white font-medium hover:bg-red-700 rounded" onClick={()=>{setprev()}}>Cancel</NavLink>
             </form>
         </div>
         }

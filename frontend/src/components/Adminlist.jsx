@@ -70,7 +70,16 @@ const Adminlist = () => {
     <div className='flex flex-wrap mt-4 justify-center gap-6 px-6'>
         {movies&&movies.map((item,index)=>
         <div key={index} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
-            <img src={item.thumbnail} alt={item.name} width={300} className="h-[350px]  rounded-md" />
+            <img 
+  src={
+    item.thumbnail.startsWith("http")
+      ? item.thumbnail                      // already a full URL
+      : `${API_BASE}/uploads/${item.thumbnail}` // local upload
+  }
+  alt={item.name}
+  width={300}
+  className="h-[350px] rounded-md"
+/>
             <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="text-2xl text-white">{item.name}</div>
                 <div className="text-[16px] text-white">Film Released on {item.year}</div>

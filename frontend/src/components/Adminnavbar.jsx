@@ -13,7 +13,7 @@ const Adminnavbar = () => {
     <div className='flex bg-[#313131ff] justify-between top-0 fixed w-full z-20 items-center'>
         <img src={logo} alt="logo" className='w-30'  />
         <div className='text-3xl text-[#d01313ff] font-bold'>ADMIN DASHBOARD</div>
-        <NavLink onClick={()=>logouthandle()} className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000] text-xl">Logout</NavLink>
+        <NavLink to="/signin" onClick={()=>logouthandle()} className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000] text-xl">Logout</NavLink>
     </div>
   )
 }

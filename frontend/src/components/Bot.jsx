@@ -105,7 +105,14 @@ const Bot = () => {
           className="cursor-pointer flex gap-3 bg-[#141414] p-2 rounded-lg border border-red-700 hover:bg-[#1b1b1b] transition"
         >
           <img
-            src={thumb || "https://via.placeholder.com/120x160?text=No+Image"}
+            src={
+    typeof thumb === "string"
+      ? (thumb.startsWith("http")
+          ? thumb
+          : `${API_BASE}/uploads/${thumb}`
+        )
+      : URL.createObjectURL(current.thumbnail) // if File object
+  }
             alt={name}
             className="w-16 h-20 object-cover rounded"
           />

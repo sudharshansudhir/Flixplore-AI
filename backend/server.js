@@ -477,6 +477,7 @@ app.post("/api/smartbot", async (req, res) => {
       // search across all collections
       const [m1, m2, a, r, d, e, s] = await Promise.all([
         allMovies.find(personQuery).limit(50),
+        Movie.find(personQuery).limit(50),
         Series.find(personQuery).limit(50),
         Actions.find(personQuery).limit(50),
         Romantic.find(personQuery).limit(50),
@@ -497,6 +498,7 @@ app.post("/api/smartbot", async (req, res) => {
     if (isAll && !isSeriesOnly) {
       const [m1, a, r, d, e] = await Promise.all([
         allMovies.find({}).limit(100),
+        Movie.find({}).limit(100),
         Actions.find({}).limit(100),
         Romantic.find({}).limit(100),
         Drama.find({}).limit(100),
@@ -519,6 +521,7 @@ app.post("/api/smartbot", async (req, res) => {
       const q = { $and: genreRegexes.map(r => ({ genre: { $regex: r } })) };
       const results = await Promise.all([
         allMovies.find(q).limit(50),
+        Movie.find(q).limit(50),
         Series.find(q).limit(50),
         Actions.find(q).limit(50),
         Romantic.find(q).limit(50),
@@ -569,6 +572,7 @@ app.post("/api/smartbot", async (req, res) => {
     // Query all collections in parallel
     const [mAll, sAll, aAll, rAll, dAll, eAll] = await Promise.all([
       allMovies.find({ $or: orQuery }).limit(200),
+      Movie.find({ $or: orQuery }).limit(200),
       Series.find({ $or: orQuery }).limit(200),
       Actions.find({ $or: orQuery }).limit(200),
       Romantic.find({ $or: orQuery }).limit(200),

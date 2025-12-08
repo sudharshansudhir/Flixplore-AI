@@ -7,6 +7,14 @@ import axios from "axios";
 const API_BASE = import.meta.env.VITE_URI;
 
 const Allseries = () => {
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
   const [Movies,setMovies] = useState();
   var [Filtered, setFiltered] = useState();
   const [showOverlay, setShowOverlay] = useState(false);
@@ -54,6 +62,7 @@ const handleSearchChange = (e) => {
         const data=await axios.get(`${API_BASE}`)
         setMovies(data.data)
         setFiltered(data.data)
+        console.log(data.data)
     }
   fetchmovies()
 
@@ -143,7 +152,7 @@ const handleSearchChange = (e) => {
         {Filtered&&Filtered.length > 0 ? (
           Filtered.map((item, index) => {
              const isOpen = showOverlay === index;
-            <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+           return <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
   <img src={item.thumbnail} alt={item.name} width={300} className="h-[350px]  rounded-md" />
               <div className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}>
     <div className="text-2xl text-white">{item.name}</div>

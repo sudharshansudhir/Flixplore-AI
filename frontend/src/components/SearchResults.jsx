@@ -8,7 +8,14 @@ import axios from 'axios';
 const API_BASE = import.meta.env.VITE_URI;
 
 const SearchResults = () => {
-  
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
       const {list,setlist,login,userlist,setuserlist,query,Wishlistind,setcurrfilm,setWishlistind} = useContext(AppContext)
       const navigate=useNavigate()
       const [showOverlay, setShowOverlay] = useState(false);

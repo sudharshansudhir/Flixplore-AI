@@ -4,6 +4,14 @@ import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 const Adminlist = () => {
+    const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
     const [users,setusers]=useState([])
     const isAdmin=localStorage.getItem("isAdmin")
     const token=localStorage.getItem("token")
@@ -18,6 +26,8 @@ const Adminlist = () => {
                 }
             })
             setmovies(data.data.movies)
+            console.log(data.data.movies)
+            console.log(data.data.users)
             setusers(data.data.users)
             
             
@@ -69,18 +79,19 @@ const Adminlist = () => {
     <div className='text-2xl flex justify-center items-center w-[80%] rounded-md bg-[#313131ff] py-4 px-2'>Movies List</div></div>
     <div className='flex justify-end my-6 w-[80%]'><NavLink to="/admin/add" className="px-3 py-1 border border-[#f83838ff] rounded-md bg-[#000000] hover:bg-[#c10404ff] hover-border-[#000000] text-xl">Add New Movie</NavLink></div>
     <div className='flex flex-wrap mt-4 justify-center gap-6 px-6'>
-        {movies&&movies.map((item,index)=> {const isOpen = showOverlay === index;
-        <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+        {movies?movies.map((item,index)=> { const isOpen = showOverlay === index;
+        return <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)} className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
             <img 
   src={
     item.thumbnail.startsWith("http")
       ? item.thumbnail                      // already a full URL
-      : `${API_BASE}/uploads/${item.thumbnail}` // local upload
+      : getCloudinaryImg(item.thumbnail) // local upload
   }
   alt={item.name}
   width={300}
   className="h-[350px] rounded-md"
 />
+
             <div className={`absolute inset-0 flex flex-col justify-center items-center bg-[#222020af] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"} md:opacity-0 md:group-hover:opacity-100`}>
                 <div className="text-2xl text-white">{item.name}</div>
                 <div className="text-[16px] text-white">Film Released on {item.year}</div>
@@ -97,7 +108,7 @@ const Adminlist = () => {
             </div>
           </div>
         
-})}
+}):<>Loading</>}
        
     </div>
         <div className='flex mt-16 mb-8 justify-center items-center'>

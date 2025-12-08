@@ -5,6 +5,14 @@ const jwt=require("jsonwebtoken")
 require("dotenv").config();
 const multer=require("multer")
 
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const mongoose=require('mongoose');
 // const { default: Movies } = require('../frontend/src/pages/Movies');
@@ -17,18 +25,48 @@ const mongoose=require('mongoose');
         console.log("Error Occured",err)
     })
 
-  const storage=multer.diskStorage({
-    destination:(req,file,cb)=>{
-      cb(null,"uploads/")
-    },
-    filename:(req,file,cb)=>{
-      const uniquename=Date.now()+"-"+file.originalname;
-      cb(null,uniquename)
+  // const storage=multer.diskStorage({
+  //   destination:(req,file,cb)=>{
+  //     cb(null,"uploads/")
+  //   },
+  //   filename:(req,file,cb)=>{
+  //     const uniquename=Date.now()+"-"+file.originalname;
+  //     cb(null,uniquename)
 
-    }
-  })
+  //   }
+  // })
 
-  const upload=multer({storage})
+const thumbnailStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "flixplore/thumbnails",
+    allowed_formats: ["jpg","png","jpeg","webp"],
+  },
+});
+
+const videoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "flixplore/videos",
+    allowed_formats: ["mp4","mkv","mov"],
+    resource_type: "video"
+  },
+});
+
+const upload = multer({
+  storage: multer.diskStorage({}), // just placeholder
+});
+const uploadCloud = multer({
+  storage: new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async (req, file) => ({
+      folder: file.fieldname === "thumbnail" 
+                ? "flixplore/thumbnails" 
+                : "flixplore/videos",
+      resource_type: file.fieldname === "thumbnail" ? "image" : "video",
+    }),
+  }),
+});
 
 const userSchema=new mongoose.Schema({
     username:{type:String},
@@ -327,7 +365,7 @@ app.post("/api/register",async(req,res)=>{
     const user=await User.findOne({email})
     const token=jwt.sign({id:user._id},process.env.userkey)
     res.json({message:"Login Success",token})
-    res.json({message:"New User Registered successfully"})
+    res.json({message:"New User Registered successfully",token})
 })
 app.post("/api/login",async(req,res)=>{
     const {username,password}=req.body;
@@ -374,7 +412,7 @@ app.post("/api/wishlist",authMiddleware,async(req,res)=>{
 
 app.use("/uploads",express.static("uploads"))
 
-app.post("/api/admin/add",adminauthMiddleware,upload.fields([{name:"thumbnail",maxCount:1},{name:"videosrc",maxCount:1}]),async(req,res)=>{
+app.post("/api/admin/add",adminauthMiddleware,uploadCloud.fields([{name:"thumbnail",maxCount:1},{name:"videosrc",maxCount:1}]),async(req,res)=>{
   // const {current}=req.body;
   // console.log(current)
   const data=new Movie({

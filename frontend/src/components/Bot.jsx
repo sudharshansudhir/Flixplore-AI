@@ -7,6 +7,14 @@ import { AppContext } from "../context/Context"; // adjust path if needed
 const API_BASE = import.meta.env.VITE_URI;
 
 const Bot = () => {
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]); // { from: "user"|"bot"|"movie", text?, movie? }

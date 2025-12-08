@@ -6,6 +6,14 @@ import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 
 const MyList = () => {
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
 
     const {setcurrfilm}=useContext(AppContext)
     const [Movies,setMovies]=useState()

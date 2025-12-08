@@ -9,6 +9,14 @@ const API_BASE = import.meta.env.VITE_URI;
 
 
 const Action = () => {
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
   const [Movies,setMovies]=useState()
   const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
 

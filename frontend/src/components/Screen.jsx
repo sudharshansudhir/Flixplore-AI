@@ -5,7 +5,15 @@ import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 
 const Screen = () => {
-  const {name}=useParams()
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
+  const {id}=useParams()
   const [founded,setfounded]=useState({})
   const navigate=useNavigate()
   const token=localStorage.getItem("token")
@@ -16,7 +24,7 @@ const Screen = () => {
     async function fetchdata(){
       const data=await axios.get(`${API_BASE}/`)
       const movies=data.data
-      const found=movies.find(item=>String(item.name)==String(name))
+      const found=movies.find(item=>String(item._id)==String(id))
       setfounded(found)
     }
     fetchdata()
@@ -38,7 +46,7 @@ const Screen = () => {
             typeof founded.videosrc === "string"
               ? (founded.videosrc.startsWith("http")
                   ? founded.videosrc
-                  : `${API_BASE}/uploads/${founded.videosrc}`
+                  : getCloudinaryVideo(founded.videosrc)
                 )
               : founded.videosrc instanceof File
                 ? URL.createObjectURL(founded.videosrc)

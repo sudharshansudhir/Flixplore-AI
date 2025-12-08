@@ -9,6 +9,14 @@ const API_BASE = import.meta.env.VITE_URI;
 const Allmovies = () => {
   // store full list
   const [Movies,setMovies] = useState();
+   const CLOUD_NAME = "dkq83tqpq"; // change this
+
+const getCloudinaryImg = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
+
+const getCloudinaryVideo = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${id}`;
+
     const {login,userlist,setuserlist,setcurrfilm} = useContext(AppContext)
   const [showOverlay, setShowOverlay] = useState(false);
   // store filtered list (what user sees)
@@ -150,12 +158,12 @@ const Allmovies = () => {
           Filtered.map((item, index) => {
              const isOpen = showOverlay === index;
             
-            <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)}  className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+            return <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)}  className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
   <img  src={
     typeof item.thumbnail === "string"
       ? (item.thumbnail.startsWith("http")
           ? item.thumbnail
-          : `${API_BASE}/uploads/${item.thumbnail}`
+          : getCloudinaryImg(item.thumbnail)
         )
       : URL.createObjectURL(current.thumbnail) // if File object
   } alt={item.name} width={300} className="h-[350px]  rounded-md" />
@@ -174,7 +182,7 @@ const Allmovies = () => {
       )}
       
 
-      <NavLink to={`/watch/${item.name}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
+      <NavLink to={`/watch/${item._id}`} onClick={()=>setcurrfilm(item.name)}   className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">
               Watch Now
             </NavLink></div>:<div>
               <NavLink to="/signin"  className="border block w-full  cursor-pointer hover:border-[#000000] hover:border-2 border-[#ff0000] my-4 text-center text-[18px] rounded-md px-3 py-1  text-white">

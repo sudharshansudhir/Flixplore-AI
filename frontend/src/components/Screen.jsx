@@ -28,7 +28,7 @@ const getCloudinaryVideo = (id) =>
       setfounded(found)
     }
     fetchdata()
-  },[name])
+  },[id])
   return (
    <div>
   {founded ? (

@@ -75,7 +75,7 @@ async function removefromlist(id){
         )
       : URL.createObjectURL(current.thumbnail) // if File object
   } alt={item.name} className='w-full h-[70%]'/>
-                <NavLink onClick={()=>setcurrfilm(item.name)}  to={`/watch/${item.name}`} className='block w-full text-center px-3 py-1 hover:border-1 hover:border-black hover:bg-[#b20f0fff] bg-[#ff0000ff] h-[15%]'>Watch Now</NavLink>
+                <NavLink onClick={()=>setcurrfilm(item.name)}  to={`/watch/${item._id}`} className='block w-full text-center px-3 py-1 hover:border-1 hover:border-black hover:bg-[#b20f0fff] bg-[#ff0000ff] h-[15%]'>Watch Now</NavLink>
                 <button onClick={()=>removefromlist(item.name)} className='block w-full hover:border-black hover:bg-[#272626ff] text-center px-3 py-1 bg-[#0e0e0eff] border-1 border-[#ff0000ff] rounded-md h-[15%]'>Remove from wishlist</button>
                 
            </div>

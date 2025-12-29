@@ -108,7 +108,7 @@ async function addlist(item){
 
     <div className="p-4 w-full">
       {login?<div>
-                {userlist.includes(item._id) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
+                {userlist.includes(item.name) ? (<button onClick={() => navigate("/wishlist")} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">
                   Go to Wishlist
                 </button>
               ) : (<button  onClick={() => {addlist(item.name);}} className="text-[18px] rounded-md bg-[#ff0000ff] px-3 py-1 w-full">

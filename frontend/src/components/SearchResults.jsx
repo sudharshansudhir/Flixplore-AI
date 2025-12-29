@@ -4,11 +4,12 @@ import Navbar from './Navbar'
 import { AppContext } from '../context/Context'
 
 import { NavLink, useNavigate } from 'react-router-dom'
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 const API_BASE = import.meta.env.VITE_URI;
 
 const SearchResults = () => {
    const CLOUD_NAME = "dkq83tqpq"; // change this
+   const [Movieslist,setMovieslist]=useState()
 
 const getCloudinaryImg = (id) =>
   `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${id}`;
@@ -19,18 +20,28 @@ const getCloudinaryVideo = (id) =>
       const {list,setlist,login,userlist,setuserlist,query,Wishlistind,setcurrfilm,setWishlistind} = useContext(AppContext)
       const navigate=useNavigate()
       const [showOverlay, setShowOverlay] = useState(false);
-  const [allmovies,setallmovies]=useState()
- var Movieslist
-  if(allmovies){
-    Movieslist=allmovies.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase()) )
-  }
+  // const [allmovies,setallmovies]=useState()
+
+  // if(allmovies){
+  //   Movieslist=allmovies.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase()) )
+  // }
 
         
        useEffect(()=>{
-  fetch(`${API_BASE}/`)
-  .then((values)=>values.json())
-  .then((value)=>setallmovies(value))
-  .catch((e)=>console.log("Error occured during fetching action movies"))
+
+        async function getMovies() {
+          const data=await axios.get(`${API_BASE}/`)
+          const allmovies=data.data
+          const list=allmovies.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase()) )
+          setMovieslist(list)
+          console.log(list)
+          
+        }
+        getMovies()
+  // fetch(`${API_BASE}/`)
+  // .then((values)=>values.json())
+  // .then((value)=>setallmovies(value))
+  // .catch((e)=>console.log("Error occured during fetching action movies"))
  async function fetchwishlist(){
       try{
         const wishlist=await axios.get(`${API_BASE}/api/wishlist`,{
@@ -51,7 +62,7 @@ const getCloudinaryVideo = (id) =>
 
     fetchwishlist()
 
-},[]) 
+},[query]) 
 
 async function addlist(item){
     console.log("...")
@@ -86,7 +97,7 @@ async function addlist(item){
         {(Movieslist &&Movieslist.length > 0) ? (
           Movieslist.map((item, index) => {
              const isOpen = showOverlay === index;
-            <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)}  className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
+             return  <div key={index} onClick={() => setShowOverlay(isOpen ? null : index)}  className="relative w-[300px] h-[350px] shrink-0 hover:scale-105 group">
   <img src={
     typeof item.thumbnail === "string"
       ? (item.thumbnail.startsWith("http")
@@ -127,6 +138,7 @@ async function addlist(item){
       </div>
         </div>
     </div>
+
   )
 }
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import placeholder from '../assets/movieplaceholder.png'
+
 import axios from 'axios'
 const API_BASE = import.meta.env.VITE_URI;
 const Editmovie = () => {

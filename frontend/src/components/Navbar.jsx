@@ -9,7 +9,7 @@ import { AppContext } from '../context/Context';
 const Navbar = () => {
   const [mobile,setmobile]=useState(false);
   const {login,setlogin,setquery}=useContext(AppContext)
-  // const [search,setsearch]=useState(false);
+  const [search,setsearch]=useState(false);
   function mobileview(){
     setmobile(!mobile)
   }

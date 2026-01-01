@@ -23,7 +23,9 @@ const Logincard = () => {
             const response=await axios.post(`${API_BASE}/api/admin/login`,{adminID:username,password})
             // console.log(response)
             // console.log(response.data)
-            // console.log(response.data)
+            console.log("...",response.data)
+            console.log("<<<",response)
+
             // console.log(response.data.token)
             localStorage.setItem("token",response.data.token)
             alert("ADMIN LOGIN SUCCESSFUL")
@@ -41,7 +43,7 @@ const Logincard = () => {
             else{
                 try{
             const response=await axios.post(`${API_BASE}/api/login`,{username,password})
-            
+            console.log(response)
             localStorage.setItem("token",response.data.token)
                 alert("Login SUCCESSFUL")
             setlogin(true)
@@ -50,6 +52,7 @@ const Logincard = () => {
             }
             catch(e){
                 alert(e.response.data.message)
+                console.log(e.response.data.message)
             }
             }
             

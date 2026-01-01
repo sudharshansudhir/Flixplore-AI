@@ -387,7 +387,7 @@ app.post("/api/admin/login",async(req,res)=>{
     adminID:process.env.adminID,
     adminPassword:process.env.adminPassword
   }
-  console.log(id,password)
+  // console.log(id,password)
 
   if(id==defaultadmin.adminID && password==defaultadmin.adminPassword){
     console.log("You are ADMIN")

@@ -395,6 +395,7 @@ app.post("/api/admin/login",async(req,res)=>{
     // const isAdmin=jwt.sign({isAdmin:true},"admintrue")
    return res.send({token})
   }
+  return res.send({message:"Error",defaultadmin})
 })
 app.post("/api/wishlist",authMiddleware,async(req,res)=>{
     const {wishlist}=req.body;

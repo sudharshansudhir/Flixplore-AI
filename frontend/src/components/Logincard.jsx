@@ -26,7 +26,7 @@ const Logincard = () => {
             console.log("...",response.data)
             console.log("<<<",response)
 
-            // console.log(response.data.token)
+            console.log(response.data.token)
             localStorage.setItem("token",response.data.token)
             alert("ADMIN LOGIN SUCCESSFUL")
             setlogin(true)

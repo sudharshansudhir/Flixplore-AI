@@ -385,7 +385,7 @@ app.post("/api/admin/login",async(req,res)=>{
   const password=req.body.password
   const defaultadmin={
     adminID:process.env.adminID,
-    adminPassword:process.env.adminPassword
+    adminPassword:process.env.adminPASSWORD
   }
   // console.log(id,password)
 
